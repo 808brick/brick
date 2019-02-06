@@ -8,9 +8,9 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            LET'S OBTAIN THIS GRAIN
-          </p>
+          <h1>
+            Brick App
+          </h1>
         </header>
       </div>
     );

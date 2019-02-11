@@ -4,6 +4,8 @@ const std_msgs = rosnodejs.require('std_msgs').msg;
 const path = require('path');
 const electron = require('electron');
 
+const cv = require('opencv4nodejs');
+
 const { app, BrowserWindow, Menu , ipcMain} = electron;
 
 let mainWindow;

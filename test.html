@@ -1,16 +1,14 @@
 <head>
 </head>
 <body>
-  <h1> Test Application ROS </h1>  <br><br>
-  <h3> Test Ros Subscriber</h3>
+  <h1> Test HTML File </h1>  <br><br>
   <div id="html-topic-div"></div>
-  <div id="test_image_div"></div>
 <ul>
 
 </ul>
 
   <br><br>
-  <button id="Refresh IPC">Refresh IPC</button>
+  <!-- <button id="Refresh IPC">Refresh IPC</button> -->
 
 
 
@@ -22,15 +20,6 @@
 <script>
 	const electron = require('electron');
 	const { ipcRenderer } = electron;
-
-	// var cv = require('opencv4nodejs');
- //  	// var path = require('path');
- //  	var fs = require('fs');
-
-  	// console.log(path.resolve('public/images', '256_logo.png'));
-  	// var selectedImgBGR = cv.imread(path.resolve('public/images', '256_logo.png')).resizeToMax(500);
-
-  	// renderImage(selectedImgBGR, document.getElementById('test_image_div'));
 
 	const topic_div = document.getElementById('html-topic-div');
 	const todo_list = document.querySelector('ul');

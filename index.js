@@ -10,9 +10,12 @@ const { app, BrowserWindow, Menu , ipcMain} = electron;
 
 let mainWindow;
 let sub;
+let aa;
 
 app.on('ready', () => {
 	// console.log("App is now ready");
+
+  aa = 3;
 
 	mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -20,7 +23,17 @@ app.on('ready', () => {
 	const mainMenu = Menu.buildFromTemplate(menuTemplate);
 	Menu.setApplicationMenu(mainMenu);
 
-	ros_subscriber();
+	// ros_subscriber();
+
+  const plugin1 = require('./ros_subscriber.js');
+
+
+    plugin1.main(mainWindow);
+
+    // console.log(aa);
+    // console.log("Js file");
+
+    // plugin1.test(mainWindow);
 
 });
 
@@ -28,23 +41,24 @@ app.on('ready', () => {
 ipcMain.on('ipc_init', (event, text) => {
 	// mainWindow.webContents.send('test_ros_topic', "some text");
 	console.log(text);
+  // mainWindow.loadURL("https://google.com");
 	mainWindow.webContents.send('ipc_init', "IPC Started JS");
 	
 });
 
-function ros_subscriber(){
-	rosnodejs.initNode('/listener_node')
-    .then((rosNode) => {
-      // Create ROS subscriber on the 'chatter' topic expecting String messages
-      sub = rosNode.subscribe('/chatter', std_msgs.String,
-        (data) => { // define callback execution
-    	  mainWindow.webContents.send('test_ros_topic', data.data);
-          // console.log(data.data);
-          // console.log(typeof data.data);
-        }
-      );
-    });
-}
+// function ros_subscriber(){
+// 	rosnodejs.initNode('/listener_node')
+//     .then((rosNode) => {
+//       // Create ROS subscriber on the 'chatter' topic expecting String messages
+//       sub = rosNode.subscribe('/chatter', std_msgs.String,
+//         (data) => { // define callback execution
+//     	  mainWindow.webContents.send('test_ros_topic', data.data);
+//           // console.log(data.data);
+//           // console.log(typeof data.data);
+//         }
+//       );
+//     });
+// }
 
 const menuTemplate = [
 
@@ -142,3 +156,14 @@ const menuTemplate = [
     ]
   },
 ];
+
+
+const plugin1 = require('./ros_subscriber.js');
+
+
+// plugin1.main(mainWindow);
+
+// console.log(aa);
+// console.log("Js file");
+
+// plugin1.test(mainWindow);

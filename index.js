@@ -13,22 +13,22 @@ let sub;
 let aa;
 
 app.on('ready', () => {
-	// console.log("App is now ready");
+  // console.log("App is now ready");
 
   aa = 3;
 
-	mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
-	mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-	const mainMenu = Menu.buildFromTemplate(menuTemplate);
-	Menu.setApplicationMenu(mainMenu);
+  const mainMenu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(mainMenu);
 
-	// ros_subscriber();
+  // ros_subscriber();
 
-  const plugin1 = require('./ros_subscriber.js');
+  // const plugin1 = require('./ros_subscriber.js');
 
 
-    plugin1.main(mainWindow);
+    // plugin1.main(mainWindow);
 
     // console.log(aa);
     // console.log("Js file");
@@ -39,20 +39,20 @@ app.on('ready', () => {
 
 
 ipcMain.on('ipc_init', (event, text) => {
-	// mainWindow.webContents.send('test_ros_topic', "some text");
-	console.log(text);
+  // mainWindow.webContents.send('test_ros_topic', "some text");
+  console.log(text);
   // mainWindow.loadURL("https://google.com");
-	mainWindow.webContents.send('ipc_init', "IPC Started JS");
-	
+  mainWindow.webContents.send('ipc_init', "IPC Started JS");
+  
 });
 
 // function ros_subscriber(){
-// 	rosnodejs.initNode('/listener_node')
+//  rosnodejs.initNode('/listener_node')
 //     .then((rosNode) => {
 //       // Create ROS subscriber on the 'chatter' topic expecting String messages
 //       sub = rosNode.subscribe('/chatter', std_msgs.String,
 //         (data) => { // define callback execution
-//     	  mainWindow.webContents.send('test_ros_topic', data.data);
+//        mainWindow.webContents.send('test_ros_topic', data.data);
 //           // console.log(data.data);
 //           // console.log(typeof data.data);
 //         }
@@ -116,21 +116,21 @@ const menuTemplate = [
       {
         label: 'Start roscore locally',
         click() {
-        	console.log("roscore funtionality not developed yet");
+          console.log("roscore funtionality not developed yet");
         }
       },
       {
-      	label: "Change ROS IP",
-      	click() {
-      		console.log("roscore funtionality not developed yet");
-      	}
+        label: "Change ROS IP",
+        click() {
+          console.log("roscore funtionality not developed yet");
+        }
       },
       { type: 'separator' },
       {
-      	label: "Run Launch File",
-      	click() {
-      		console.log("roscore funtionality not developed yet");
-      	}
+        label: "Run Launch File",
+        click() {
+          console.log("roscore funtionality not developed yet");
+        }
       },
     ]
   },
@@ -143,22 +143,55 @@ const menuTemplate = [
       {
         label: 'Scan The Code',
         click() {
-        	console.log("roscore funtionality not developed yet");
+          console.log("roscore funtionality not developed yet");
         }
       },
       { type: 'separator' },
       {
-      	label: "Add New Plugin",
-      	click() {
-      		console.log("roscore funtionality not developed yet");
-      	}
+        label: "Add New Plugin",
+        click() {
+          console.log("roscore funtionality not developed yet");
+        }
       }
     ]
   },
 ];
 
 
-const plugin1 = require('./ros_subscriber.js');
+
+
+function init_plugins_menu(){
+  const fs = require('fs');
+
+  let plugindata = fs.readFileSync('plugins.json');  
+  plugindata = JSON.parse(plugindata);  
+  console.log(plugindata); 
+  for (var plugin in plugindata){
+    console.log(plugin);
+    console.log(plugindata[plugin]["name"]);
+
+    plugin_name = plugindata[plugin]["name"]
+
+    plugin_submenu = {
+        label: plugin_name,
+        click() {
+          // plugin_require = require('./ros_subscriber.js');
+          // plugin_require.main(mainWindow);
+          console.log("Hello There");
+        }
+      }
+
+  }
+
+
+
+}
+
+// console.log(menuTemplate);
+// console.log(menuTemplate[4]);
+console.log(menuTemplate[4]["submenu"]);
+
+menuTemplate[4]["submenu"].push({"label": "this is a test", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./ros_subscriber.js'); plugin_require.main(mainWindow);}})
 
 
 // plugin1.main(mainWindow);

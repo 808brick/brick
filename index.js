@@ -66,6 +66,13 @@ const menuTemplate = [
     label: 'File',
     submenu: [
       {
+        label: "Back To Home Screen",
+        click() {
+          // console.log("roscore funtionality not developed yet");
+          mainWindow.loadURL(`file://${__dirname}/index.html`);
+        }
+      },
+      {
         label: 'Quit',
         // accelerator: 'Ctrl+Q',
         // accelerator: (() => {
@@ -78,7 +85,7 @@ const menuTemplate = [
         accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q', //If true return Command+Q if false return Ctrl+Q
         click() {
           app.quit();
-        }
+        },
       }
     ]
   },
@@ -191,7 +198,7 @@ function init_plugins_menu(){
 // console.log(menuTemplate[4]);
 console.log(menuTemplate[4]["submenu"]);
 
-menuTemplate[4]["submenu"].push({"label": "this is a test", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./ros_subscriber.js'); plugin_require.main(mainWindow);}})
+menuTemplate[4]["submenu"].unshift({"label": "Test ROS Subscriber", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./public/Plugins/test_ros_subscriber/index.js'); plugin_require.main(mainWindow);}})
 
 
 // plugin1.main(mainWindow);

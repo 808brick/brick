@@ -7,6 +7,7 @@
     "electron": "electron .",
     "electron-rebuild": "electron-rebuild -w opencv4nodejs",
     "launch-test": "gnome-terminal -- roscore && gnome-terminal -- nodejs talker.js && gnome-terminal -- electron .",
+    "launch-test-2": "gnome-terminal -- roscore & rosrun web_video_server web_video_server & nodejs talker.js & rosbag play -l -q ./public/Plugins/test_ros_subscriber/test_bag.bag & electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

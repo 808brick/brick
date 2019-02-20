@@ -15,8 +15,9 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  const mainMenu = Menu.buildFromTemplate(menuTemplate);
-  Menu.setApplicationMenu(mainMenu);
+  init_plugins_menu(Menu);
+
+  
 
   // ros_subscriber();
 
@@ -127,13 +128,6 @@ const menuTemplate = [
   {
     label: 'Plugins',
     submenu: [
-
-      {
-        label: 'Scan The Code',
-        click() {
-          console.log("roscore funtionality not developed yet");
-        }
-      },
       { type: 'separator' },
       {
         label: "Add New Plugin",
@@ -148,38 +142,46 @@ const menuTemplate = [
 
 
 
-function init_plugins_menu(){
+function init_plugins_menu(Menu){
   const fs = require('fs');
 
   let plugindata = fs.readFileSync('plugins.json');  
   plugindata = JSON.parse(plugindata);  
-  console.log(plugindata); 
+  console.log("Plugin Data: \n" + plugindata); 
   for (var plugin in plugindata){
-    console.log(plugin);
-    console.log(plugindata[plugin]["name"]);
+    console.log("Plugin: " + plugin);
+    console.log("Plugin Data name: " + plugindata[plugin]["name"]);
+    console.log("Plugin folder name: " + plugindata[plugin]["plugin_folder"]);
 
-    plugin_name = plugindata[plugin]["name"]
+    var plugin_name = plugindata[plugin]["name"];
+    var plugin_folder = plugindata[plugin]["plugin_folder"];
 
-    plugin_submenu = {
-        label: plugin_name,
+    var plugin_submenu = {
+        "label": plugin_name,
         click() {
-          // plugin_require = require('./ros_subscriber.js');
-          // plugin_require.main(mainWindow);
           console.log("Hello There");
-        }
-      }
-
-  }
-
-
-
+          plugin_require = require('./public/Plugins/' + plugin_folder + '/index.js'); 
+          plugin_require.main(mainWindow);
+        }   
+      } //End of submenu
+      menuTemplate[4]["submenu"].unshift(plugin_submenu);
+  } //End of for loop
+  var mainMenu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(mainMenu);
 }
+
+// function check_for_new_plugins(){
+  
+// }
+
+// init_plugins_menu()
+
 
 // console.log(menuTemplate);
 // console.log(menuTemplate[4]);
-console.log(menuTemplate[4]["submenu"]);
+// console.log(menuTemplate[4]["submenu"]);
 
-menuTemplate[4]["submenu"].unshift({"label": "Test ROS Subscriber", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./public/Plugins/test_ros_subscriber/index.js'); plugin_require.main(mainWindow);}})
+// menuTemplate[4]["submenu"].unshift({"label": "Test ROS Subscriber", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./public/Plugins/test_ros_subscriber/index.js'); plugin_require.main(mainWindow);}})
 
 
 // plugin1.main(mainWindow);

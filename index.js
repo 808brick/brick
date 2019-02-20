@@ -1,10 +1,5 @@
-const rosnodejs = require('rosnodejs');
-const std_msgs = rosnodejs.require('std_msgs').msg;
-
 const path = require('path');
 const electron = require('electron');
-
-const cv = require('opencv4nodejs');
 
 const { app, BrowserWindow, Menu , ipcMain} = electron;
 
@@ -45,20 +40,6 @@ ipcMain.on('ipc_init', (event, text) => {
   mainWindow.webContents.send('ipc_init', "IPC Started JS");
   
 });
-
-// function ros_subscriber(){
-//  rosnodejs.initNode('/listener_node')
-//     .then((rosNode) => {
-//       // Create ROS subscriber on the 'chatter' topic expecting String messages
-//       sub = rosNode.subscribe('/chatter', std_msgs.String,
-//         (data) => { // define callback execution
-//        mainWindow.webContents.send('test_ros_topic', data.data);
-//           // console.log(data.data);
-//           // console.log(typeof data.data);
-//         }
-//       );
-//     });
-// }
 
 const menuTemplate = [
 

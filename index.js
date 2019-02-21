@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const electron = require('electron');
 
@@ -147,11 +148,9 @@ function init_plugins_menu(Menu){
 
   let plugindata = fs.readFileSync('plugins.json');  
   plugindata = JSON.parse(plugindata);  
-  console.log("Plugin Data: \n" + plugindata); 
   for (var plugin in plugindata){
-    console.log("Plugin: " + plugin);
-    console.log("Plugin Data name: " + plugindata[plugin]["name"]);
-    console.log("Plugin folder name: " + plugindata[plugin]["plugin_folder"]);
+    // console.log("Plugin Data name: " + plugindata[plugin]["name"]);
+    // console.log("Plugin folder name: " + plugindata[plugin]["plugin_folder"]);
 
     var plugin_name = plugindata[plugin]["name"];
     var plugin_folder = plugindata[plugin]["plugin_folder"];
@@ -170,10 +169,46 @@ function init_plugins_menu(Menu){
   Menu.setApplicationMenu(mainMenu);
 }
 
-// function check_for_new_plugins(){
-  
-// }
+function check_for_new_plugins(path){
 
+  console.log(fs.readdirSync(path));
+  var plugin_directories = fs.readdirSync(path);
+  plugindata = fs.readFileSync('plugins.json');  
+  plugindata = JSON.parse(plugindata); 
+  var plugin_json_directories = [];
+  for (var plugin in plugindata){
+    plugin_json_directories.push(plugin);
+  }
+  console.log("Plugin JSON Directories: " + plugin_json_directories);
+  if (plugin_directories.length != plugin_json_directories.length){
+    var all_plugin_info = {};
+    // var plugin_info = {};
+    console.log("New Plugins Detected");
+    for (plugin in plugin_directories){
+      plugin = plugin_directories[plugin];
+
+      console.log("For plugin: " + plugin);
+      if (fs.existsSync('./public/Plugins/'+plugin+'/plugin_info.json')) {
+        console.log('./public/Plugins/'+plugin+'/plugin_info.json');
+        plugindata = fs.readFileSync('./public/Plugins/'+plugin+'/plugin_info.json');
+        plugindata = JSON.parse(plugindata); 
+        console.log(plugindata);
+        all_plugin_info[plugin] = {"name" : plugindata["name"], "repo" : plugindata["repo"], "plugin_folder" : plugindata["plugin_folder"]};
+      }
+        
+    }
+    console.log(all_plugin_info);
+    all_plugin_info = JSON.stringify(all_plugin_info, null, "\t");
+    fs.writeFile('plugins.json', all_plugin_info, (err) => {  
+      if (err) throw err;
+          console.log('Package.json file updated!');
+      });
+    console.log("\n\n");
+    console.log(all_plugin_info);
+  }
+}
+
+check_for_new_plugins('./public/Plugins/');
 // init_plugins_menu()
 
 

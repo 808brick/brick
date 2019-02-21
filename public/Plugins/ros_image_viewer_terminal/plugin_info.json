@@ -1,3 +1,5 @@
 {
-	"name": "ROS Image Viewer Terminal"
+	"name": "ROS Image Viewer Terminal",
+	"repo": null,
+	"plugin_folder": "ros_image_viewer_terminal" 
 }

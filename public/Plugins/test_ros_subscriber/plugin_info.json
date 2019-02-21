@@ -1,3 +1,5 @@
 {
-	"name": "Test ROS Subscriber"
+	"name": "Test ROS Subscriber",
+	"repo": null,
+	"plugin_folder": "test_ros_subscriber" 
 }

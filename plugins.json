@@ -1,13 +1,22 @@
 {
+	"image_testing": {
+		"name": "Image And Mapping Testing",
+		"repo": null,
+		"plugin_folder": "image_testing"
+	},
+	"plugin_1": {
+		"name": "Plugin 1",
+		"repo": null,
+		"plugin_folder": "plugin_1"
+	},
 	"ros_image_viewer_terminal": {
 		"name": "ROS Image Viewer Terminal",
 		"repo": null,
 		"plugin_folder": "ros_image_viewer_terminal"
 	},
-	"Test ROS Subscriber": {
+	"test_ros_subscriber": {
 		"name": "Test ROS Subscriber",
 		"repo": null,
-		"plugin_folder": "test_ros_subscriber" 
+		"plugin_folder": "test_ros_subscriber"
 	}
 }
-

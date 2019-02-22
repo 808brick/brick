@@ -7,6 +7,7 @@ const { app, BrowserWindow, Menu , ipcMain} = electron;
 let mainWindow;
 let sub;
 let aa;
+let plugin_folder;
 
 app.on('ready', () => {
   // console.log("App is now ready");
@@ -149,17 +150,18 @@ function init_plugins_menu(Menu){
   let plugindata = fs.readFileSync('plugins.json');  
   plugindata = JSON.parse(plugindata);  
   for (var plugin in plugindata){
-    // console.log("Plugin Data name: " + plugindata[plugin]["name"]);
-    // console.log("Plugin folder name: " + plugindata[plugin]["plugin_folder"]);
 
     var plugin_name = plugindata[plugin]["name"];
-    var plugin_folder = plugindata[plugin]["plugin_folder"];
+    plugin_folder = plugindata[plugin]["plugin_folder"];
+
+    console.log("Plugin Folder: " + plugin_folder);
 
     var plugin_submenu = {
         "label": plugin_name,
-        click() {
-          console.log("Hello There");
-          plugin_require = require('./public/Plugins/' + plugin_folder + '/index.js'); 
+        "plugin_folder": plugin_folder,
+        click(menuItem, browserWindow, event){
+          console.log("CLICK FUNCTION THING");
+          plugin_require = require('./public/Plugins/' + menuItem.plugin_folder + '/index.js'); 
           plugin_require.main(mainWindow);
         }   
       } //End of submenu

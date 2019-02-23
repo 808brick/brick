@@ -1,35 +1,21 @@
 {
-  "name": "brick",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "concurrently": "^4.1.0",
-    "electron": "^4.0.4",
-    "electron-builder": "^20.38.5",
-    "electron-is-dev": "^1.0.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-scripts": "2.1.3",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.82.5",
-    "wait-on": "^3.2.0"
-  },
+  "name": "electron_ros",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"SET BROWSER=none && npm run start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron": "electron ."
+    "electron": "electron .",
+    "electron-rebuild": "electron-rebuild -w opencv4nodejs",
+    "launch-test": "gnome-terminal -- roscore && gnome-terminal -- nodejs talker.js && gnome-terminal -- electron .",
+    "launch-test-2": "gnome-terminal -- roscore & rosrun web_video_server web_video_server & nodejs talker.js & rosbag play -l -q ./public/Plugins/test_ros_subscriber/test_bag.bag & electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "main": "public/main.js"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^4.0.4",
+    "path": "^0.12.7",
+    "rosnodejs": "^3.0.0",
+    "semantic-ui": "^2.4.2"
+  }
 }

@@ -19,20 +19,6 @@ app.on('ready', () => {
 
   init_plugins_menu(Menu);
 
-  
-
-  // ros_subscriber();
-
-  // const plugin1 = require('./ros_subscriber.js');
-
-
-    // plugin1.main(mainWindow);
-
-    // console.log(aa);
-    // console.log("Js file");
-
-    // plugin1.test(mainWindow);
-
 });
 
 
@@ -58,14 +44,6 @@ const menuTemplate = [
       },
       {
         label: 'Quit',
-        // accelerator: 'Ctrl+Q',
-        // accelerator: (() => {
-        //   if (process.platform === "darwin"){
-        //     return 'Command+Q';
-        //   } else {
-        //     return 'Ctrl+Q'
-        //   }
-        // })(), //Immediatly Invoked Function
         accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q', //If true return Command+Q if false return Ctrl+Q
         click() {
           app.quit();
@@ -154,13 +132,10 @@ function init_plugins_menu(Menu){
     var plugin_name = plugindata[plugin]["name"];
     plugin_folder = plugindata[plugin]["plugin_folder"];
 
-    console.log("Plugin Folder: " + plugin_folder);
-
     var plugin_submenu = {
         "label": plugin_name,
         "plugin_folder": plugin_folder,
         click(menuItem, browserWindow, event){
-          console.log("CLICK FUNCTION THING");
           plugin_require = require('./public/Plugins/' + menuItem.plugin_folder + '/index.js'); 
           plugin_require.main(mainWindow);
         }   
@@ -173,7 +148,7 @@ function init_plugins_menu(Menu){
 
 function check_for_new_plugins(path){
 
-  console.log(fs.readdirSync(path));
+  // console.log(fs.readdirSync(path));
   var plugin_directories = fs.readdirSync(path);
   plugindata = fs.readFileSync('plugins.json');  
   plugindata = JSON.parse(plugindata); 
@@ -181,7 +156,7 @@ function check_for_new_plugins(path){
   for (var plugin in plugindata){
     plugin_json_directories.push(plugin);
   }
-  console.log("Plugin JSON Directories: " + plugin_json_directories);
+  // console.log("Plugin JSON Directories: " + plugin_json_directories);
   if (plugin_directories.length != plugin_json_directories.length){
     var all_plugin_info = {};
     // var plugin_info = {};
@@ -212,18 +187,3 @@ function check_for_new_plugins(path){
 
 check_for_new_plugins('./public/Plugins/');
 // init_plugins_menu()
-
-
-// console.log(menuTemplate);
-// console.log(menuTemplate[4]);
-// console.log(menuTemplate[4]["submenu"]);
-
-// menuTemplate[4]["submenu"].unshift({"label": "Test ROS Subscriber", click(){console.log("Hello There!"); plugin_require = plugin_require = require('./public/Plugins/test_ros_subscriber/index.js'); plugin_require.main(mainWindow);}})
-
-
-// plugin1.main(mainWindow);
-
-// console.log(aa);
-// console.log("Js file");
-
-// plugin1.test(mainWindow);

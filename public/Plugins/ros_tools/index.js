@@ -44,6 +44,8 @@ function main(mainWindow, ipcMain){
       })
     exec("pkill rosmaster  ", (err, stdout, stderr) => {
       })
+    exec("pkill web_video_serve", (err, stdout, stderr) => {
+    })
 
   });
 
@@ -51,6 +53,7 @@ function main(mainWindow, ipcMain){
       exec("rostopic list", (err, stdout, stderr) => {
         var res = stdout.split("\n");
         res.splice(-1,1);
+        console.log(res);
         callback(res);
     })
     }
@@ -100,6 +103,13 @@ function main(mainWindow, ipcMain){
     }); 
     ipcMain.on('start_video_server', (event, text) => {
       exec("rosrun web_video_server web_video_server", (err, stdout, stderr) => {
+      //   console.log(err)
+      console.log(stdout);
+      // console.log(stderr);
+    })
+    }); 
+    ipcMain.on('stop_video_server', (event, text) => {
+      exec("pkill web_video_serve", (err, stdout, stderr) => {
       //   console.log(err)
       console.log(stdout);
       // console.log(stderr);

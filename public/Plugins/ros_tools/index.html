@@ -84,18 +84,17 @@
 		ipcRenderer.send('ros_node_kill', 'kill all nodes');
 		console.log("requesting to kill all ros nodes");
 	};
-	document.getElementById("start_video_server").onclick = function(){
+	document.getElementById("start video server").onclick = function(){
 		ipcRenderer.send('start_video_server', 'start video server');
 		console.log("starting video server");
 	};
-	document.getElementById("stop_video_server").onclick = function(){
+	document.getElementById("stop video server").onclick = function(){
 		ipcRenderer.send('stop_video_server', 'stop video server');
 		console.log("stopping video server");
 	};
 	// document.getElementById('Refresh IPC').click();
 
 	ipcRenderer.on('rostopic_list', (event, received_info) => {
-
     	div1.innerHTML = received_info;
 	});
 	

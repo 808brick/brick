@@ -2,9 +2,16 @@
 </head>
 <body>
   <h1 style="text-align: center;"> Welcome to the Kanaloa GUI </h1>  <br><br>
-  <h3 style="text-align: center;"> If this GUI is ugly, blame Emily, cause she's supposed to make it look pretty</h3>
+  <!-- <h3 style="text-align: center;"> If this GUI is ugly, blame Emily, cause she's supposed to make it look pretty</h3> -->
 
-  <img style="display: block; margin-left: auto; margin-right: auto; width: 50%;" src="./public/Plugins/test_ros_subscriber/Kanaloa_logo1_filled.png" alt="Kanaloa Logo">
+  <img style="display: block; margin-left: auto; margin-right: auto; width: 40%;" src="./public/Plugins/test_ros_subscriber/Kanaloa_logo1_filled.png" alt="Kanaloa Logo">
+<!-- 
+  <button id="rostopic button">Rostopic list</button>
+  <button id="roscore button">Start roscore</button>
+  <button id="roscore stop">Stop roscore</button> -->
+
+  <!-- <iframe style="width:100%; height:500px;" src="https://www.github.com/"></iframe> -->
+  <!-- <webview id="foo" src="https://www.github.com/" style="display:inline-flex; width:640px; height:480px"></webview> -->
 
 <ul>
 
@@ -17,5 +24,40 @@
 <script>
 	const electron = require('electron');
 	const { ipcRenderer } = electron;
+
+	const todo_list = document.querySelector('ul');
+	// const topic_div = document.getElementById('html-topic-div');
+
+	// document.getElementById("rostopic button").onclick = function(){
+	// 	ipcRenderer.send('rostopic_list', 'send_rostopics');
+	// 	console.log("ROS topics requested");
+	// };
+
+	// document.getElementById("roscore button").onclick = function(){
+	// 	ipcRenderer.send('roscore', 'start roscore');
+	// 	console.log("roscore start requested");
+	// };
+	// document.getElementById("roscore stop").onclick = function(){
+	// 	ipcRenderer.send('roscore_stop', 'start roscore');
+	// 	console.log("roscore stop requested");
+	// };
+
+	// ipcRenderer.on('rostopic_list', (event, received_info) => {
+
+	// 	const li = document.createElement('p');
+ //    	const text = document.createTextNode(received_info);
+ //    	todo_list.innerHTML = '';
+ //    	li.appendChild(text);
+ //    	todo_list.appendChild(li);
+	// });
+
+	// ipcRenderer.on('rostopic_list', (event, received_info) => {
+
+	// 	const li = document.createElement('p');
+ //    	const text = document.createTextNode(received_info);
+ //    	todo_list.innerHTML = '';
+ //    	li.appendChild(text);
+ //    	todo_list.appendChild(li);
+	// });
 
 </script>

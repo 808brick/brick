@@ -2,30 +2,114 @@ const fs = require('fs');
 const path = require('path');
 const electron = require('electron');
 
+const exec = require('child_process').exec
+
+// const util = require('util')
+
+let child_window_num = 0;
+let main_window_indicator = false;
+let window_location = [0, 0]
+let window_position_change = [0, 0];
+let child = [];
+let first_time_init = false;
+
+
 const { app, BrowserWindow, Menu , ipcMain} = electron;
+
+
 
 let mainWindow;
 let sub;
-let aa;
-let plugin_folder;
 
 app.on('ready', () => {
   // console.log("App is now ready");
 
-  aa = 3;
+  // check_for_new_plugins('./public/Plugins/');
 
   mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+  main_window_indicator = true;
 
-  init_plugins_menu(Menu);
+  // console.log(mainWindow.screenX);
+  if (first_time_init){
+    child.push(new BrowserWindow({ parent: mainWindow, icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`)  }));
+    child[child_window_num].loadURL(`file://${__dirname}/public/Plugins/test_ros_subscriber/index.html`);
+    child[child_window_num].setMenuBarVisibility(false)
+    child_window_num += 1;
+    // child.push(new BrowserWindow({ parent: mainWindow, icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`)  }));
+    // child[child_window_num].loadURL(`file://${__dirname}/public/Plugins/image_testing/index.html`);
+    // child[child_window_num].setMenuBarVisibility(false)
+    first_time_init = false;
+  }
+
+  check_for_new_plugins('./public/Plugins/', Menu);
+  // init_plugins_menu(Menu);
+
+  // console.log(util.inspect(mainWindow, {showHidden: false, depth: null}));
+
+  // function1();
 
 });
 
 
-ipcMain.on('ipc_init', (event, text) => {
-  // mainWindow.webContents.send('test_ros_topic', "some text");
+function function1(){
+  //cahnged to 'moved' for macos
+  mainWindow.on('move', function() {
+    // Do move event action
+    // console.log("Shit got moved")
+    position = mainWindow.getPosition();
+    console.log("Window Position: " + position);
+    x = position[0];
+    y = position[1];
+    window_position_change = [window_location[0]-x, window_location[1]-y]
+    console.log("Position change");
+    console.log(window_position_change);
+    //then change position of child windows
+
+    window_location = [x, y];
+
+    for (var child_window in child){
+      // console.log(child_window)
+      // console.log(child_window);
+      child_pos = child[child_window].getPosition();
+      console.log("Child POS")
+      console.log(child_pos);
+      // console.log(child[child_window])
+      child[child_window].setPosition(child_pos[0] - window_position_change[0], child_pos[1] - window_position_change[1] );
+      console.log("Y: " + child_pos[1] + " - " + window_position_change[1])
+      // child[child_window].setPosition(child_pos[0] - window_position_change[0], window_location[1]);
+      console.log("Child position " + child_window + child[child_window].getPosition());
+
+    }
+
+
+}); 
+}
+
+
+
+// ipcMain.on('rostopic_list', (event, text) => {
+//   rostopic_list(function (result) {
+//     mainWindow.webContents.send('rostopic_list', result);
+//   });
+// });
+
+// ipcMain.on('roscore', (event, text) => {
+//   exec("roscore", (err, stdout, stderr) => {
+//   console.log(stdout);
+//   console.log(stderr);
+// })
+// });
+// ipcMain.on('roscore_stop', (event, text) => {
+//   exec("killall -9 roscore && killall -9 rosmaster ", (err, stdout, stderr) => {
+//   console.log(stdout);
+//   console.log(stderr);
+// })
+// });
+
+
+ipcMain.on('ipc_init', (event, text) => {;
   console.log(text);
-  // mainWindow.loadURL("https://google.com");
   mainWindow.webContents.send('ipc_init', "IPC Started JS");
   
 });
@@ -126,7 +210,8 @@ function init_plugins_menu(Menu){
   const fs = require('fs');
 
   let plugindata = fs.readFileSync('plugins.json');  
-  plugindata = JSON.parse(plugindata);  
+  plugindata = JSON.parse(plugindata);
+  // let plugindata = JSON.parse(fs.readFileSync('plugins.json', { encoding: 'utf8' }));  
   for (var plugin in plugindata){
 
     var plugin_name = plugindata[plugin]["name"];
@@ -137,7 +222,7 @@ function init_plugins_menu(Menu){
         "plugin_folder": plugin_folder,
         click(menuItem, browserWindow, event){
           plugin_require = require('./public/Plugins/' + menuItem.plugin_folder + '/index.js'); 
-          plugin_require.main(mainWindow);
+          plugin_require.main(mainWindow, ipcMain);
         }   
       } //End of submenu
       menuTemplate[4]["submenu"].unshift(plugin_submenu);
@@ -146,7 +231,7 @@ function init_plugins_menu(Menu){
   Menu.setApplicationMenu(mainMenu);
 }
 
-function check_for_new_plugins(path){
+function check_for_new_plugins(path, Menu){
 
   // console.log(fs.readdirSync(path));
   var plugin_directories = fs.readdirSync(path);
@@ -164,26 +249,41 @@ function check_for_new_plugins(path){
     for (plugin in plugin_directories){
       plugin = plugin_directories[plugin];
 
-      console.log("For plugin: " + plugin);
+      // console.log("For plugin: " + plugin);
       if (fs.existsSync('./public/Plugins/'+plugin+'/plugin_info.json')) {
-        console.log('./public/Plugins/'+plugin+'/plugin_info.json');
+        // console.log('./public/Plugins/'+plugin+'/plugin_info.json');
         plugindata = fs.readFileSync('./public/Plugins/'+plugin+'/plugin_info.json');
         plugindata = JSON.parse(plugindata); 
-        console.log(plugindata);
+        // console.log(plugindata);
         all_plugin_info[plugin] = {"name" : plugindata["name"], "repo" : plugindata["repo"], "plugin_folder" : plugindata["plugin_folder"]};
       }
         
     }
-    console.log(all_plugin_info);
+    // console.log("All Plugin Info: ");
+    
     all_plugin_info = JSON.stringify(all_plugin_info, null, "\t");
+    // console.log("Set all plugin ingo");
+    // console.log(all_plugin_info);
     fs.writeFile('plugins.json', all_plugin_info, (err) => {  
-      if (err) throw err;
-          console.log('Package.json file updated!');
+      if (err) {throw err; console.log("Error"); console.log(err);}
+          console.log('plugins.json file updated');
+          init_plugins_menu(Menu);
+          
       });
-    console.log("\n\n");
-    console.log(all_plugin_info);
+    // console.log("\n\n");
+    // console.log(all_plugin_info);
+  } else {
+    init_plugins_menu(Menu);
   }
+  
 }
 
-check_for_new_plugins('./public/Plugins/');
-// init_plugins_menu()
+
+function rostopic_list(callback){
+  exec("rostopic list", (err, stdout, stderr) => {
+    var res = stdout.split("\n");
+    res.splice(-1,1);
+    callback(res);
+})
+}
+

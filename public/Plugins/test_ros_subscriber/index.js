@@ -1,5 +1,6 @@
 const rosnodejs = require('rosnodejs');
 const std_msgs = rosnodejs.require('std_msgs').msg;
+const exec = require('child_process').exec
 
 module.exports = {
   test: function (mainWindow) {
@@ -38,4 +39,18 @@ function main(mainWindow){
 function test(text){
   console.log(text);
   console.log("End");
+}
+
+function rostopic_list_pre(callback){
+  exec("rostopic list", (err, stdout, stderr) => {
+    var res = stdout.split("\n");
+    res.splice(-1,1);
+    callback(res);
+})
+}
+
+function rostopic_list(){
+  rostopic_list_pre(function (result) {
+    return result;
+  });
 }

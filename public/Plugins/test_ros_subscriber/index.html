@@ -1,6 +1,7 @@
 <head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
 <link rel="stylesheet" href="index.css">
+<link rel="javascript" href="dropdown_options.js">
 <script>
 	// Fix jQuery not being defined
 	// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
@@ -23,6 +24,7 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
 </head>
+
 <body>
   <div style="width: 100vw, height: 100vh">
 
@@ -33,56 +35,17 @@
 
   <br><br>
 
+<ul></ul>
   <button id="Refresh IPC" class="ui button" style="margin: 10px">Refresh IPC</button>
 
   <br>
 
   <div class="view-row">
   	<div class="view">
-
-		<table class="ui celled table" style="margin-top: 40px">
-		  <thead>
-		    <tr><th>Topic</th>
-		    <th>Value</th>
-		  </tr></thead>
-		  <tbody>
-		    <tr>
-		      <td data-label="Topic">Velocity</td>
-		      <td data-label="Value">nyoom mph</td>
-		    </tr>
-		    <tr>
-		      <td data-label="Topic">GPS</td>
-		      <td data-label="Value">(345, 54, 8897)</td>
-		    </tr>
-		    <tr>
-		      <td data-label="Topic">Direction</td>
-		      <td data-label="Value">13 degrees</td>
-		    </tr>
-		   	<tr>
-		      <td data-label="Topic">Topic</td>
-		      <td data-label="Value"></td>
-		    </tr>
-		  </tbody>
-		</table>
-
-		<button class="ui teal basic button" style="margin: 10px">Delete Topic</button>
-		<button class="ui teal button" style="margin: 10px; float: right">Add Topic</button>
-
+  		<select id="topicList"></select>
     </div>
 
   	<div class="view">
-
-  		<div class="ui fluid selection dropdown">
-		  <input type="hidden" name="topic">
-		  <i class="dropdown icon"></i>
-		  <div class="default text">Select Topic</div>
-		  <div class="menu">
-		    <div class="item" data-value="0">Topic 1</div>
-		    <div class="item" data-value="1">Topic 2</div>
-		    <div class="item" data-value="2">Topic 3</div>
-		    <div class="item" data-value="3">Topic 4</div>
-		  </div>
-		</div>
 
   		<iframe style="width: 100%; height: 400px" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed"></iframe>
 

@@ -1,0 +1,43 @@
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+<link rel="stylesheet" href="index.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+	// Fix jQuery not being defined
+	// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+	// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+	try {
+		$ = jQuery = module.exports;
+		// If you want module.exports to be empty, uncomment:
+		// module.exports = {};
+	} catch(e) {}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+</head>
+
+<body>
+<table class="ui celled table" style="margin-top: 40px">
+		  <thead>
+		    <tr><th>Topic</th>
+		    <th>Value</th>
+		  </tr></thead>
+		  <tbody>
+		    <tr>
+		      <td data-label="Topic">Velocity</td>
+		      <td data-label="Value">nyoom mph</td>
+		    </tr>
+		    <tr>
+		      <td data-label="Topic">GPS</td>
+		      <td data-label="Value">(345, 54, 8897)</td>
+		    </tr>
+		    <tr>
+		      <td data-label="Topic">Direction</td>
+		      <td data-label="Value">13 degrees</td>
+		    </tr>
+		  </tbody>
+		</table>
+
+		<button class="ui teal basic button" style="margin: 10px">Delete Topic</button>
+		<button class="ui teal button" style="margin: 10px; float: right">Add Topic</button>
+</body>

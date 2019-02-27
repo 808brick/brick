@@ -1,9 +1,12 @@
 const rosnodejs = require('rosnodejs');
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
+const exec = require('child_process').exec
+const glob = require('glob');
+
 module.exports = {
-  main: function (mainWindow) {
-    main(mainWindow);
+  main: function (mainWindow, ipcMain) {
+    main(mainWindow, ipcMain);
   },
 
 };
@@ -26,8 +29,24 @@ function ros_subscriber(mainWindow){
     });
 }
 
-function main(mainWindow){
+function main(mainWindow, ipcMain){
   ros_subscriber(mainWindow);
+
+    function rostopic_list(callback){
+      exec("rostopic list", (err, stdout, stderr) => {
+        var res = stdout.split("\n");
+        res.splice(-1,1);
+        console.log(res);
+        callback(res);
+    })
+    }
+
+  ipcMain.on('rostopic_list', (event, text) => {
+      console.log("Rostopic list js triggered");
+      rostopic_list(function (result) {
+        mainWindow.webContents.send('rostopic_list', result);
+      });
+});
 }
 
 // ros_subscriber();

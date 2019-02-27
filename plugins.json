@@ -1,13 +1,13 @@
 {
-	"ros_image_viewer_terminal": {
-		"name": "ROS Image Viewer Terminal",
-		"repo": null,
-		"plugin_folder": "ros_image_viewer_terminal"
+	"ros_dashboard": {
+		"name": "ROS Dashboard",
+		"repo": "null",
+		"plugin_folder": "ros_dashboard"
 	},
-	"Test ROS Subscriber": {
-		"name": "Test ROS Subscriber",
-		"repo": null,
-		"plugin_folder": "test_ros_subscriber" 
+	"ros_image_viewer_terminal": {
+		"name": "ROS Image Viewer Terminal"
+	},
+	"test_ros_subscriber": {
+		"name": "Test ROS Subscriber"
 	}
 }
-

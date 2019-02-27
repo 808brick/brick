@@ -1,0 +1,25 @@
+.view-row {
+  display: flex;
+  width: 100%;
+  height: 50%;
+  box-sizing: border-box;
+}
+
+.view {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  border: 1px solid #BDBDBD;
+}
+
+/* Temporary class */
+.test {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  color: #777;
+  text-align: center;
+  font-size: 10em;
+  transform: translateY(-50%);
+}

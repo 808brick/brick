@@ -2,6 +2,7 @@ const rosnodejs = require('rosnodejs');
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
 const exec = require('child_process').exec
+const glob = require('glob');
 
 module.exports = {
   test: function (mainWindow) {
@@ -101,6 +102,75 @@ function main(mainWindow, ipcMain){
       // console.log(stderr);
     })
     }); 
+    ipcMain.on('ros_source', (event, text) => {
+      console.log("Sorucing specified file");
+      exec("echo 'source ~/velodyne_ws/devel/setup.bash' >> ~/.bashrc", (err, stdout, stderr) => {
+        console.log(err);
+      console.log(stdout);
+      console.log(stderr);
+    })
+    }); 
+
+    function roslaunch_list(callback){
+      exec("rospack list", (err, stdout, stderr) => {
+      // console.log("ERR");
+      // console.log(err);
+      // console.log("STDOUT");
+      // console.log(stdout);
+      var package_list = [];
+      var launch_files = [];
+      var res = stdout.split("\n");
+      res.splice(-1,1);
+      // console.log(res)
+      for (package in res){
+        package_list.push(res[package].split(" "));
+      }
+      // console.log("Package List: ");
+      // console.log(package_list);
+      for (package in package_list){
+        // console.log("PAckage: " + package_list[package]);
+        var path = package_list[package][1];
+        // console.log("Path1: "+ path);
+        files = glob.sync(path + '/**/*.launch', {});
+        // a = glob.sync(path + '/**/*.launch', {}, (err, files)=>{
+          // console.log("Path: "+ path);
+          // console.log("Files: ");
+          // console.log(files);
+          if (files != undefined && files.length != 0) {
+            for (launch_file in files){
+              // console.log("For Loop:");
+              // console.log(files[launch_file]);
+              split_file = files[launch_file].split("/");
+              launch_files.push([package_list[package][0], split_file[split_file.length-1]]);
+              // console.log([package_list[package][0], split_file[split_file.length-1]]);
+
+            }
+          } // end if not undefined
+        // }) // end glob file checking
+        // console.log("files:");
+        // console.log(files);
+      } //end for loop
+      // console.log("Launch Files Completed: ");
+      // console.log(launch_files);
+
+      // console.log("STDERR");
+      // console.log(stderr);
+      // console.log("Launch File Finished")
+      setTimeout(callback, 1000, launch_files);
+      // callback(launch_files);
+    })
+    }
+
+    ipcMain.on('roslaunch_list', (event, text) => {
+      console.log("List all ROSLAUNCH:");
+
+      roslaunch_list(function (result){
+        console.log("Result");
+        console.log(result);
+      })
+      // console.log("Launch Files Completed: ");
+      // console.log(launch_files);
+    });
     ipcMain.on('start_video_server', (event, text) => {
       exec("rosrun web_video_server web_video_server", (err, stdout, stderr) => {
       //   console.log(err)

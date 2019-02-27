@@ -25,6 +25,8 @@
   <button id="ros node kill">Kill all ROS Nodes</button>
   <button id="start video server">Start ROS Video Server</button>
   <button id="stop video server">Stop ROS Video Server</button>
+  <button id="roslaunch list">ROS Launch List</button>
+  <button id="ros source">Source ROS</button>
 
   <ul id="ul2">
 
@@ -92,6 +94,14 @@
 		ipcRenderer.send('stop_video_server', 'stop video server');
 		console.log("stopping video server");
 	};
+	document.getElementById("roslaunch list").onclick = function(){
+		ipcRenderer.send('roslaunch_list', 'list all launch files');
+		console.log("requestign roslaunch list");
+	};
+	document.getElementById("ros source").onclick = function(){
+		ipcRenderer.send('ros_source', 'source file');
+		console.log("Sourcing Ros file: ____");
+	};
 	// document.getElementById('Refresh IPC').click();
 
 	ipcRenderer.on('rostopic_list', (event, received_info) => {
@@ -100,6 +110,5 @@
 	
 	ipcRenderer.on('test_ros_topic', (event, received_info) => {  
 		ul1.innerHTML = received_info;
-		
 	});
 </script>

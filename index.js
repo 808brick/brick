@@ -87,7 +87,6 @@ function function1(){
 }
 
 
-
 // ipcMain.on('rostopic_list', (event, text) => {
 //   rostopic_list(function (result) {
 //     mainWindow.webContents.send('rostopic_list', result);

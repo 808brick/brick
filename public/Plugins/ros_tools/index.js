@@ -113,10 +113,6 @@ function main(mainWindow, ipcMain){
 
     function roslaunch_list(callback){
       exec("rospack list", (err, stdout, stderr) => {
-      // console.log("ERR");
-      // console.log(err);
-      // console.log("STDOUT");
-      // console.log(stdout);
       var package_list = [];
       var launch_files = [];
       var res = stdout.split("\n");
@@ -125,21 +121,11 @@ function main(mainWindow, ipcMain){
       for (package in res){
         package_list.push(res[package].split(" "));
       }
-      // console.log("Package List: ");
-      // console.log(package_list);
       for (package in package_list){
-        // console.log("PAckage: " + package_list[package]);
         var path = package_list[package][1];
-        // console.log("Path1: "+ path);
         files = glob.sync(path + '/**/*.launch', {});
-        // a = glob.sync(path + '/**/*.launch', {}, (err, files)=>{
-          // console.log("Path: "+ path);
-          // console.log("Files: ");
-          // console.log(files);
           if (files != undefined && files.length != 0) {
             for (launch_file in files){
-              // console.log("For Loop:");
-              // console.log(files[launch_file]);
               split_file = files[launch_file].split("/");
               launch_files.push([package_list[package][0], split_file[split_file.length-1]]);
               // console.log([package_list[package][0], split_file[split_file.length-1]]);
@@ -147,15 +133,7 @@ function main(mainWindow, ipcMain){
             }
           } // end if not undefined
         // }) // end glob file checking
-        // console.log("files:");
-        // console.log(files);
       } //end for loop
-      // console.log("Launch Files Completed: ");
-      // console.log(launch_files);
-
-      // console.log("STDERR");
-      // console.log(stderr);
-      // console.log("Launch File Finished")
       setTimeout(callback, 1000, launch_files);
       // callback(launch_files);
     })
@@ -167,6 +145,7 @@ function main(mainWindow, ipcMain){
       roslaunch_list(function (result){
         console.log("Result");
         console.log(result);
+        mainWindow.webContents.send('roslaunch_list',result);
       })
       // console.log("Launch Files Completed: ");
       // console.log(launch_files);
@@ -187,21 +166,21 @@ function main(mainWindow, ipcMain){
     }); 
 
     ipcMain.on('map_server_start', (event, text) => {
-      exec("service docker start", (err, stdout, stderr) => {
+      exec("sudo service docker start", (err, stdout, stderr) => {
       // console.log(err);
       console.log(stdout);
       console.log(stderr);
       // console.log("ERR: ");
       // console.log(err);
       if (err == null){
-        exec("docker  run  --rm -v  $(pwd):/data  -p  8081:80  klokantech/tileserver-gl .public/Plugins/image_testing/oahu.mbtiles ", (err, stdout, stderr) => {
+        exec("sudo docker  run  --rm -v  $(pwd):/data  -p  8082:80  klokantech/openmaptiles-server", (err, stdout, stderr) => {
         // exec("sudo docker  run  --rm -v  $(pwd):/data  -p  8081:80  klokantech/tileserver-gl .public/Plugins/image_testing/oahu.mbtiles ", (err, stdout, stderr) => {
           // console.log("Socket Command Run")
           // console.log(err);
           // console.log("STDOUT")
           console.log(stdout);
-          // console.log("STDERR")
-          // console.log(stderr);
+          console.log("STDERR")
+          console.log(stderr);
           if (stderr != null){
             console.log("This port is already used. Map Tile server may already be running, or another application is using the same port")
           }
@@ -217,7 +196,41 @@ function main(mainWindow, ipcMain){
       console.log(stdout);
       console.log(stderr);
     })
-    });  
+    }); 
+
+    ipcMain.on('launch_file_upload', (event, text) => {
+      const { dialog } = require('electron')
+      var launch_file = dialog.showOpenDialog({properties: ['openFile'] })
+      console.log(launch_file) 
+
+      if (launch_file != undefined){
+        mainWindow.webContents.send('launch_file_upload', launch_file[0]);
+        var command_str = "roslaunch " + launch_file
+
+        exec(command_str, (err, stdout, stderr) => {
+          // console.log(err);
+          console.log(stdout);
+          console.log(stderr);
+        })
+      }
+    })
+
+    ipcMain.on('launch_file_from_dropdown', (event, text) => {
+      console.log(text)
+
+      if (text != undefined){
+        var command_str = "roslaunch " + text
+        console.log(command_str);
+
+        exec(command_str, (err, stdout, stderr) => {
+          // console.log(err);
+          console.log(stdout);
+          console.log(stderr);
+        })
+      }
+    })
+
+    
 }
 
 // ros_subscriber();

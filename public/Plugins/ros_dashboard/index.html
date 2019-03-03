@@ -6,7 +6,7 @@
 		// Fix jQuery not being defined
 		// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
 		// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
-		// 
+		//
 		// delete window.exports;
 		// delete window.module;
 	</script>
@@ -70,8 +70,8 @@
 <script>
 	// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
 	//	$('.ui.dropdown').dropdown();
-	
-	const displayDirectory = '../test_ros_subscriber/Display_templates/';
+
+	const displayDirectory = '../ros_dashboard/assets/Display_templates/';
 	const viewOptions = [
 		{label: 'Image Viewer', source: 'image_viewer'},
 		{label: 'Topic Table', source: 'topic_table'},
@@ -138,7 +138,7 @@
 
 	document.getElementById("topic1").onclick = function() {
 		var iframe1 = document.getElementById("iframe1");
-		iframe1.src = "../test_ros_subscriber/Display_templates/image_viewer.html"
+		iframe1.src = "./assets/Display_templates/image_viewer.html"
 	}
 
 	// document.getElementById("drop1_topic1").onclick = function() {

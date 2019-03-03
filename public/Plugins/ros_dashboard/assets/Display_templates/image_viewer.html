@@ -1,8 +1,51 @@
 <html>
-	<body>
-		<div style="display: flex;">
+	<body style="margin: 0; padding: 0; width: 100vw; height: 100vh;">
+		<div style="width: 100%; height: 100%">
 <!--			<iframe style="flex: 1; /*width: 100%; height: 100%*/" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed"></iframe>-->
-			<img style"flex: 1;" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed">
+			<img id="video" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed">
 		</div>
+		<script>
+			let video = document.getElementById("video");
+			let animFrameHandle = undefined;
+			let videoRatio;
+
+			function resizeVideo() {
+				cancelAnimationFrame(animFrameHandle);
+				animFrameHandle = undefined;
+
+				let documentBounds = document.body.getBoundingClientRect();
+				let documentRatio = documentBounds.width / documentBounds.height;
+
+				if (videoRatio < documentRatio) {
+					// Constrain video by height
+					video.style.height = documentBounds.height;
+				} else {
+					video.style.width = documentBounds.width;
+				}
+			}
+
+			animFrameHandle = requestAnimationFrame(() => {
+				let videoBounds = video.getBoundingClientRect();
+				console.log(videoBounds);
+
+				if (videoBounds.width != 0 && videoBounds.height != 0) {
+					cancelAnimationFrame(animFrameHandle);
+					videoRatio = videoBounds.width / videoBounds.height;
+
+					// Resize video on window resize
+					window.addEventListener("resize", () => {
+						// Resize the video when the iframe size changes
+
+						if (animFrameHandle) {
+							// clearTimeout(animFrameHandle);
+							cancelAnimationFrame(animFrameHandle);
+						}
+
+						// animFrameHandle = setTimeout(resizeVideo, 10);
+						animFrameHandle = requestAnimationFrame(resizeVideo);
+					});
+				}
+			});
+		</script>
 	</body>
 </html>

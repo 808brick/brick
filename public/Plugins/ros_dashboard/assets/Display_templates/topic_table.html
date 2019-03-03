@@ -1,6 +1,6 @@
 <head>
-	<link rel="stylesheet" href="../../../CSS/semantic/src/semantic.min.css">
-	<script src="../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
+	<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
 	<script>
 		// Fix jQuery not being defined
 		// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
@@ -13,7 +13,7 @@
 		} catch (e) {}
 
 	</script>
-	<script src="../../../CSS/semantic/src/semantic.min.js"></script>
+	<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
 </head>
 
 <body>
@@ -40,11 +40,18 @@
 		</tbody>
 	</table>
 
-	<button class="ui teal basic button" style="margin: 10px" onclick="deleteRow()">Delete Topic</button>
-	<button class="ui teal button" style="margin: 10px; float: right" onclick="addRow()">Add Topic</button>
+
+	<button class="ui teal left attached button onclick="addRow() style="margin: 10px 0px 10px 10px;">Add Topic</button>
+	<select id="add_topic_dropdown" style="margin: 10px, 0px 10px 0px; float: right;">
+		<option selected>-- Select Topic --</option>
+	</select>
+	<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px" onclick="deleteRow()">Delete Topic</button>
 </body>
 
 <script>
+	// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
+		$('select').dropdown();
+
 	let rowCount = 3;
 	// Add rows to the table
 	function addRow() {
@@ -53,16 +60,38 @@
 		let cell1 = row.insertCell(0);
 		let cell2 = row.insertCell(1);
 		rowCount++;
-		cell1.innerHTML = "DROPDOWN HERE";
+		// cell1.innerHTML = "DROPDOWN HERE";
 		// cell2.innerHTML = "NEW CELL2";
 	}
 	// Delete rows from the table
 	function deleteRow() {
-		// if(rowCount == 0) {
-
-		// }
+		if(rowCount == 0) {
+			document.getElementbyId("myTable").disabled = true;
+		}
 		document.getElementById("myTable").deleteRow(rowCount);
 		rowCount--;
 	}
+
+	ipcRenderer.on('rostopic_list', (event, received_info) => {
+	    	// div1.innerHTML = received_info;
+
+	    	// topics_to_record = [];
+
+				topic_list = received_info;
+
+	    	rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
+	    // 	rostopic_dropdown_element.disabled = false;
+	    // 	document.getElementById("remove_topic").disabled = false;
+			// document.getElementById("clear_topics").disabled = false;
+	    // 	document.getElementById("add_topic").disabled = false;
+	    	rostopic_dropdown_element.options.length = 0
+			for(var i = 0; i < received_info.length; i++) {
+				var topic_name = received_info[i];
+			    var el = document.createElement("option");
+			    el.textContent = topic_name;
+			    el.value = topic_name;
+			    rostopic_dropdown_element.appendChild(el);
+		    }
+		});
 
 </script>

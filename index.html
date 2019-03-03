@@ -1,6 +1,17 @@
 <head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+  // Fix jQuery not being defined
+  // See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+  // https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+  try {
+    $ = jQuery = module.exports;
+    // If you want module.exports to be empty, uncomment:
+    // module.exports = {};
+  } catch (e) {}
+</script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
 
 </head>
@@ -12,7 +23,7 @@
   <div id="html-topic-div"></div>
   <div id="test_image_div"></div>
 
-<!-- 
+<!--
   <br><br>
   <button id="Refresh IPC">Refresh IPC</button>
   <br>
@@ -38,14 +49,14 @@
 	const topic_div = document.getElementById('html-topic-div');
 	const todo_list = document.querySelector('ul');
 	//Init IPC connection
-	ipcRenderer.send('ipc_init', 'IPC Started');
-	document.getElementById("Refresh IPC").onclick = function(){
-		ipcRenderer.send('ipc_init', 'IPC Refreshed');
-		console.log("IPC Refreshed");
-	};
+	// ipcRenderer.send('ipc_init', 'IPC Started');
+	// document.getElementById("Refresh IPC").onclick = function(){
+	// 	ipcRenderer.send('ipc_init', 'IPC Refreshed');
+	// 	console.log("IPC Refreshed");
+	//  };
 	// document.getElementById('Refresh IPC').click();
-	
-	ipcRenderer.on('test_ros_topic', (event, received_info) => {  
+
+	ipcRenderer.on('test_ros_topic', (event, received_info) => {
 		// const p = document.createElement('p');
 		// const text = document.createTextNode(received_info);
 		const li = document.createElement('p');
@@ -56,6 +67,6 @@
     	// todo_list.innerHTML = li;
 		// p.appendChild(text);
 		// topic_div.appendChild(p);
-		
+
 	});
 </script>

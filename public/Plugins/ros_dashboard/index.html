@@ -26,46 +26,53 @@
 </head>
 
 <body>
-	<div style="width: 100vw, height: 100vh">
+
+	<div style="width: 100vw, height: 100vh; display: flex; flex-direction: column;">
+		<!-- Status bar -->
+		<div style="width: 100%; height: 5%; background-color: blue;">
+			Status bar
+			<div style="float: left; vertical-align: middle;">
+				<button class="small ui button">Refresh IPC</button>
+			</div>
+		</div>
 		<!-- Top row -->
 		<div class="view-row">
 
 			<!-- Left box -->
 			<div class="view">
 				<select class="ui dropdown">
-					<option selected>-- Select Topic --</option>
+					<option selected>-- Select Display --</option>
 				</select>
 				<iframe class="frame" src=""></iframe>
 			</div>
 			<!--		 Right box -->
 			<div class="view">
 				<select class="ui dropdown">
-					<option selected>-- Select Topic --</option>
+					<option selected>-- Select Display --</option>
 				</select>
 				<iframe class="frame" src=""></iframe>
 			</div>
 		</div>
+
 		<!-- Bottom row -->
 		<div class="view-row">
 			<!--	 	Left box -->
 			<div class="view">
 				<select class="ui dropdown">
-					<option selected>-- Select Topic --</option>
+					<option selected>-- Select Display --</option>
 				</select>
 				<iframe class="frame" src=""></iframe>
 			</div>
 			<!-- Right box -->
 			<div class="view">
 				<select class="ui dropdown">
-					<option selected>-- Select Topic --</option>
+					<option selected>-- Select Display --</option>
 				</select>
 				<iframe class="frame" src=""></iframe>
 			</div>
 		</div>
 	</div>
 </body>
-
-
 
 <script>
 	// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
@@ -75,6 +82,9 @@
 	const viewOptions = [
 		{label: 'Image Viewer', source: 'image_viewer'},
 		{label: 'Topic Table', source: 'topic_table'},
+		{label: 'Communication', source: 'communications'},
+		{label: 'ROS Tools', source: 'ros_tools'},
+		{label: 'Mapping', source: 'mapping'},
 		{label: 'Topic 1', source: 'topic'},
 		{label: 'Topic 2', source: 'topic'},
 		{label: 'Topic 3', source: 'topic'},
@@ -102,57 +112,48 @@
 			}
 		});
 
-//		dropdown.addEventListener("change", () => {
-//			viewFrame.src = dropdown.value;
-//		});
 	}
 
 	const electron = require('electron');
-	const {
-		ipcRenderer
-	} = electron;
+	const { ipcRenderer } = electron;
 
 	let rowCount = 3;
 
-	// const topic_div = document.getElementById('html-topic-div');
-	// const todo_list = document.querySelector('ul');
-	// //Init IPC connection
-	// ipcRenderer.send('ipc_init', 'IPC Started');
-	// // document.getElementById("Refresh IPC").onclick = function(){
-	// // 	ipcRenderer.send('ipc_init', 'IPC Refreshed');
-	// // 	console.log("IPC Refreshed");
-	// // };
-
-	// ipcRenderer.on('test_ros_topic', (event, received_info) => {
-
-	// 	const li = document.createElement('p');
-	//			const text = document.createTextNode(received_info);
-	//			todo_list.innerHTML = '';
-	//			li.appendChild(text);
-	//			todo_list.appendChild(li);
-	// });
-
-	// ipcRenderer.on('rostopic_list', (event, received_info) => {
-	// 	div1.innerHTML = 'topic_table.html';
-	// })
-
-	document.getElementById("topic1").onclick = function() {
-		var iframe1 = document.getElementById("iframe1");
-		iframe1.src = "./assets/Display_templates/image_viewer.html"
-	}
-
-	// document.getElementById("drop1_topic1").onclick = function() {
+	// document.getElementById("topic1").onclick = function() {
 	// 	var iframe1 = document.getElementById("iframe1");
-	// 	iframe1.src = "../test_ros_subscriber/Display templates/image_viewer.html"
+	// 	iframe1.src = "./assets/Display_templates/image_viewer.html"
 	// }
 
-	// document.getElementById("drop1_topic1").onclick = function() {
-	// 	var iframe1 = document.getElementById("iframe1");
-	// 	iframe1.src = "../test_ros_subscriber/Display templates/image_viewer.html"
-	// }
 
-	// document.getElementById("drop1_topic1").onclick = function() {
-	// 	var iframe1 = document.getElementById("iframe1");
-	// 	iframe1.src = "../test_ros_subscriber/Display templates/image_viewer.html"
-	// }
+////////////////////////////////////////////////////////////////////////////////
+//Raymonds Shit
+
+let topic_list = [];
+
+ipcRenderer.on('rostopic_list', (event, received_info) => {
+    	// div1.innerHTML = received_info;
+
+    	// topics_to_record = [];
+
+			topic_list = received_info;
+
+    	rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
+    // 	rostopic_dropdown_element.disabled = false;
+    // 	document.getElementById("remove_topic").disabled = false;
+		// document.getElementById("clear_topics").disabled = false;
+    // 	document.getElementById("add_topic").disabled = false;
+    	rostopic_dropdown_element.options.length = 0
+		for(var i = 0; i < received_info.length; i++) {
+			var topic_name = received_info[i];
+		    var el = document.createElement("option");
+		    el.textContent = topic_name;
+		    el.value = topic_name;
+		    rostopic_dropdown_element.appendChild(el);
+	    }
+	});
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 </script>

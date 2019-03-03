@@ -1,4 +1,9 @@
 {
+	"image_testing": {
+		"name": "Image And Mapping Testing",
+		"repo": null,
+		"plugin_folder": "image_testing"
+	},
 	"ros_dashboard": {
 		"name": "ROS Dashboard",
 		"repo": "null",
@@ -6,6 +11,11 @@
 	},
 	"ros_image_viewer_terminal": {
 		"name": "ROS Image Viewer Terminal"
+	},
+	"ros_tools": {
+		"name": "Ros Tools",
+		"repo": null,
+		"plugin_folder": "ros_tools"
 	},
 	"test_ros_subscriber": {
 		"name": "Test ROS Subscriber"

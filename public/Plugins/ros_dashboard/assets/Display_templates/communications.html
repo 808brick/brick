@@ -1,0 +1,16 @@
+<head>
+</head>
+<body>
+<webview id="communication_dashboard_webview" src="10.10.10.5" style="display:inline-flex; width:640px; height:480px"></webview>
+
+</body>
+
+<script>
+  const electron = require('electron');
+  var communication_dashboard = document.getElementById("communication_dashboard_webview")
+	communication_dashboard.addEventListener('did-stop-loading', function() {
+    	communication_dashboard.setZoomFactor(0.75);
+  	}, false);
+
+
+</script>

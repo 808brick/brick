@@ -1,0 +1,148 @@
+<head>
+</head>
+<body>
+<h3> ROS Tools </h3>  <br><br>
+
+<p id="launch_file_upload_p_tag" >Choose Launch File: </p>
+  <img id="file_upload" src="../images/folder.png"/>
+
+  <br/><br/>
+  <button id="roslaunch list">ROS Launch List</button>
+  <p>Select A Launch File from Dropdown: </p>
+  <select id="launch_file_dropdown">
+    <option>Hit Ros Launch List Button ...</option>
+  </select>
+  <button id="ros launch dropdown button">Launch</button>
+
+  <br/> <br/><hr>
+  <p>ROS Bag record</p>
+  <p id="bag_file_save_p_tag" >Choose Save Location: </p>
+  <img id="bag_directory" src="../images/folder.png"/>
+  <br><button id="rostopic button">ROS topic list</button>
+  <div id="div1"></div><br>
+
+  <p id="add_topic_p_tag">Add a topic to Record: </p>
+  <select id="rosbag_topic_dropdown">
+    <option>Hit Ros topic List Button ...</option>
+  </select>
+  <!-- <img id="add_topic" src="/images/folder.png"/> -->
+  <button id="add_topic">+</button>
+  <button id="remove_topic">-</button>
+  <br/>
+  <button id="clear_topics">clear topics</button>
+  <br/>
+
+  <br/>
+  <input type="number" id="bag_file_size" value=200 style="width:70px;">
+  <label>Max size of each bagfile (in MB) </label>
+  <br/><br/>
+  <button id="reocord_bag">Record</button>
+  <button id="stop_recording_bag">Stop Recording</button>
+
+
+</body>
+
+<script>
+	const electron = require('electron');
+	const { ipcRenderer } = electron;
+
+  document.getElementById("roslaunch list").onclick = function(){
+		ipcRenderer.send('roslaunch_list', 'list all launch files');
+		console.log("requesting roslaunch list");
+	};
+
+  let rosbag_record_save_location = '~/';
+	let rosbag_play_file = '';
+	let topics_to_record = [];
+
+	document.getElementById("launch_file_dropdown").disabled = true;
+	document.getElementById("ros launch dropdown button").disabled = true;
+	document.getElementById("play_bag").disabled = true;
+
+	document.getElementById('rosbag_topic_dropdown').disabled = true;
+	document.getElementById("add_topic").disabled = true;
+	document.getElementById("remove_topic").disabled = true;
+	document.getElementById("clear_topics").disabled = true;
+	document.getElementById("reocord_bag").disabled = true;
+	document.getElementById("stop_recording_bag").disabled = true;
+
+
+	document.getElementById("file_upload").onclick = function (){
+		ipcRenderer.send('launch_file_upload', 'launch file');
+		console.log("Request to launch file ...");
+	}
+	document.getElementById("ros launch dropdown button").onclick = function (){
+		var dropdown_option = document.getElementById("launch_file_dropdown")
+		var value = dropdown_option.options[dropdown_option.selectedIndex].value
+		ipcRenderer.send('launch_file_from_dropdown', value);
+		console.log("Request to launch file ..." + value);
+	}
+
+	document.getElementById("bag_directory").onclick = function(){
+		ipcRenderer.send('bag_file_save_folder', 'save bag file');
+		document.getElementById("reocord_bag").disabled = false;
+		// document.getElementById("stop_recording_bag").disabled = false;
+		console.log("Selecting bag file save location ...");
+
+	};
+
+	document.getElementById("add_topic").onclick = function(){
+		var dropdown_option = document.getElementById("rosbag_topic_dropdown")
+		var value = dropdown_option.options[dropdown_option.selectedIndex].value
+		topics_to_record.push(value)
+		console.log("adding topic ..." + value);
+		document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topics_to_record.toString();
+	};
+
+	document.getElementById("remove_topic").onclick = function(){
+		console.log("Removing Last topic ...");
+		topics_to_record.pop();
+		document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topics_to_record.toString();
+
+	};
+
+	document.getElementById("reocord_bag").onclick = function(){
+		document.getElementById("reocord_bag").disabled = true;
+		document.getElementById("stop_recording_bag").disabled = false;
+		console.log("Recording bag file ...");
+		var size = document.getElementById("bag_file_size").value
+		record_parameters = [size, topics_to_record, rosbag_record_save_location];
+		ipcRenderer.send('record_bag', record_parameters);
+
+	};
+
+	document.getElementById("stop_recording_bag").onclick = function(){
+		document.getElementById("reocord_bag").disabled = false;
+		document.getElementById("stop_recording_bag").disabled = true;
+		console.log("Stopping bag file recording ...");
+		ipcRenderer.send('stop_bag_recording', 'stop recording bag file');
+
+	};
+
+document.getElementById("rostopic button").onclick = function(){
+  ipcRenderer.send('rostopic_list', 'send_rostopics');
+  console.log("ROS topics requested");
+};
+
+ipcRenderer.on('rostopic_list', (event, received_info) => {
+    	div1.innerHTML = received_info;
+
+    	topics_to_record = [];
+
+    	rostopic_dropdown_element = document.getElementById('rosbag_topic_dropdown');
+    	rostopic_dropdown_element.disabled = false;
+    	document.getElementById("remove_topic").disabled = false;
+		document.getElementById("clear_topics").disabled = false;
+    	document.getElementById("add_topic").disabled = false;
+    	rostopic_dropdown_element.options.length = 0
+		for(var i = 0; i < received_info.length; i++) {
+			var topic_name = received_info[i];
+		    var el = document.createElement("option");
+		    el.textContent = topic_name;
+		    el.value = topic_name;
+		    rostopic_dropdown_element.appendChild(el);
+	    }
+	});
+
+
+</script>

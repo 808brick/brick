@@ -3,6 +3,7 @@ const std_msgs = rosnodejs.require('std_msgs').msg;
 
 const exec = require('child_process').exec
 const glob = require('glob');
+const { dialog } = require('electron')
 
 module.exports = {
   test: function (mainWindow) {
@@ -199,7 +200,7 @@ function main(mainWindow, ipcMain){
     }); 
 
     ipcMain.on('launch_file_upload', (event, text) => {
-      const { dialog } = require('electron')
+      
       var launch_file = dialog.showOpenDialog({properties: ['openFile'] })
       console.log(launch_file) 
 
@@ -228,6 +229,53 @@ function main(mainWindow, ipcMain){
           console.log(stderr);
         })
       }
+    })
+
+    ipcMain.on('bag_file_save_folder', (event, text) => {
+      
+      var launch_folder = dialog.showOpenDialog({properties: ['openDirectory'] })
+      console.log(launch_folder) 
+      if (launch_folder != undefined){
+        mainWindow.webContents.send('bag_file_save_folder', launch_folder[0]);
+      }
+    })
+
+    ipcMain.on('bag_file_play_location', (event, text) => {
+      
+      var launch_folder = dialog.showOpenDialog({properties: ['openFile'] })
+      console.log(launch_folder) 
+      if (launch_folder != undefined){
+        mainWindow.webContents.send('launch_save_path', launch_folder[0]);
+      }
+    })
+
+    ipcMain.on('record_bag', (event, info_array) => {
+      
+      // console.log(info_array);
+      var command_str = "rosbag record --split --size=";
+      command_str += info_array[0];
+      command_str += ' -o ' + info_array[2] + '/ ';
+      topic_list = info_array[1]
+      topic_list = topic_list.toString();
+      topic_list = topic_list.replace(/,/, ' ');
+      command_str += topic_list;
+      command_str += " __name:=gui_bag_recording";
+      console.log(command_str);
+
+      exec(command_str, (err, stdout, stderr) => {
+          // console.log(err);
+          console.log(stdout);
+          // console.log(stderr);
+        })
+    })
+
+    ipcMain.on('stop_bag_recording', (event, info_array) => {
+      exec("rosnode kill /gui_bag_recording", (err, stdout, stderr) => {
+          // console.log(err);
+          console.log(stdout);
+          // console.log(stderr);
+        })
+      
     })
 
     

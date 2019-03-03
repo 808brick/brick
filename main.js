@@ -21,12 +21,14 @@ let sub;
 
 app.on('ready', () => {
 
-  mainWindow = new BrowserWindow({icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
+  mainWindow = new BrowserWindow({nodeIntegration: true, icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`) });
+//  mainWindow = new BrowserWindow({nodeIntegration: true, icon: path.join(__dirname, `./public/images/Kanaloa_logo1_filled.png`) });
   mainWindow.loadURL(`file://${__dirname}/index.html`);
   main_window_indicator = true;
 
   if (first_time_init){
-    child.push(new BrowserWindow({ parent: mainWindow, icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`)  }));
+    child.push(new BrowserWindow({ nodeIntegration: true, parent: mainWindow, icon: path.join(__dirname, `./public/images/Kanaloa_logo4.png`)  }));
+//    child.push(new BrowserWindow({ nodeIntegration: true, parent: mainWindow, icon: path.join(__dirname, `./public/images/Kanaloa_logo1_filled.png`)  }));
     child[child_window_num].loadURL(`file://${__dirname}/public/Plugins/test_ros_subscriber/index.html`);
     child[child_window_num].setMenuBarVisibility(false)
     child_window_num += 1;

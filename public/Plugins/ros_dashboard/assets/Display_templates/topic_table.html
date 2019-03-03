@@ -1,97 +1,107 @@
-<head>
-	<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
-	<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
-	<script>
-		// Fix jQuery not being defined
-		// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
-		// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+<html>
+	<head>
+		<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
+		<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+		<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
 
-		try {
-			$ = jQuery = module.exports;
-			// If you want module.exports to be empty, uncomment:
-			// module.exports = {};
-		} catch (e) {}
+			try {
+				$ = jQuery = module.exports;
+				// If you want module.exports to be empty, uncomment:
+				// module.exports = {};
+			} catch (e) {}
 
-	</script>
-	<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
-</head>
+		</script>
+		<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
+	</head>
 
-<body>
-	<table id="myTable" class="ui celled table">
-		<thead>
-			<tr>
-				<th>Topic</th>
-				<th>Value</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td data-label="Topic">Velocity</td>
-				<td data-label="Value">nyoom mph</td>
-			</tr>
-			<tr>
-				<td data-label="Topic">GPS</td>
-				<td data-label="Value">(345, 54, 8897)</td>
-			</tr>
-			<tr>
-				<td data-label="Topic">Direction</td>
-				<td data-label="Value">13 degrees</td>
-			</tr>
-		</tbody>
-	</table>
+	<body>
+		<table id="myTable" class="ui celled table">
+			<thead>
+				<tr>
+					<th>Topic</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td data-label="Topic">Velocity</td>
+					<td data-label="Value">nyoom mph</td>
+				</tr>
+				<tr>
+					<td data-label="Topic">GPS</td>
+					<td data-label="Value">(345, 54, 8897)</td>
+				</tr>
+				<tr>
+					<td data-label="Topic">Direction</td>
+					<td data-label="Value">13 degrees</td>
+				</tr>
+			</tbody>
+		</table>
 
 
-	<button class="ui teal left attached button onclick="addRow() style="margin: 10px 0px 10px 10px;">Add Topic</button>
-	<select id="add_topic_dropdown" style="margin: 10px, 0px 10px 0px; float: right;">
-		<option selected>-- Select Topic --</option>
-	</select>
-	<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px" onclick="deleteRow()">Delete Topic</button>
-</body>
+		<button class="ui teal left attached button onclick=" addRow() style="margin: 10px 0px 10px 10px;">Add Topic</button>
+		<select id="add_topic_dropdown" style="margin: 10px, 0px 10px 0px; float: right;">
+			<option selected>-- Select Topic --</option>
+		</select>
+		<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px" onclick="deleteRow()">Delete Topic</button>
 
-<script>
-	// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
-		$('select').dropdown();
+		<script>
+			// Use the correct require function
+			require = parent.require;
+			// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
+			$('select').dropdown();
 
-	let rowCount = 3;
-	// Add rows to the table
-	function addRow() {
-		let table = document.getElementById("myTable");
-		let row = table.insertRow(4);
-		let cell1 = row.insertCell(0);
-		let cell2 = row.insertCell(1);
-		rowCount++;
-		// cell1.innerHTML = "DROPDOWN HERE";
-		// cell2.innerHTML = "NEW CELL2";
-	}
-	// Delete rows from the table
-	function deleteRow() {
-		if(rowCount == 0) {
-			document.getElementbyId("myTable").disabled = true;
-		}
-		document.getElementById("myTable").deleteRow(rowCount);
-		rowCount--;
-	}
+			let rowCount = 3;
+			// Add rows to the table
+			function addRow() {
+				let table = document.getElementById("myTable");
+				let row = table.insertRow(4);
+				let cell1 = row.insertCell(0);
+				let cell2 = row.insertCell(1);
+				rowCount++;
+				// cell1.innerHTML = "DROPDOWN HERE";
+				// cell2.innerHTML = "NEW CELL2";
+			}
+			// Delete rows from the table
+			function deleteRow() {
+				if (rowCount == 0) {
+					document.getElementbyId("myTable").disabled = true;
+				}
+				document.getElementById("myTable").deleteRow(rowCount);
+				rowCount--;
+			}
 
-	ipcRenderer.on('rostopic_list', (event, received_info) => {
-	    	// div1.innerHTML = received_info;
+			const electron = require('electron');
+			const {
+				ipcRenderer
+			} = electron;
 
-	    	// topics_to_record = [];
+			ipcRenderer.on('rostopic_list', (event, received_info) => {
+				// div1.innerHTML = received_info;
+
+				// topics_to_record = [];
 
 				topic_list = received_info;
 
-	    	rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
-	    // 	rostopic_dropdown_element.disabled = false;
-	    // 	document.getElementById("remove_topic").disabled = false;
-			// document.getElementById("clear_topics").disabled = false;
-	    // 	document.getElementById("add_topic").disabled = false;
-	    	rostopic_dropdown_element.options.length = 0
-			for(var i = 0; i < received_info.length; i++) {
-				var topic_name = received_info[i];
-			    var el = document.createElement("option");
-			    el.textContent = topic_name;
-			    el.value = topic_name;
-			    rostopic_dropdown_element.appendChild(el);
-		    }
-		});
+				rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
+				// 	rostopic_dropdown_element.disabled = false;
+				// 	document.getElementById("remove_topic").disabled = false;
+				// document.getElementById("clear_topics").disabled = false;
+				// 	document.getElementById("add_topic").disabled = false;
+				rostopic_dropdown_element.options.length = 0
+				for (var i = 0; i < received_info.length; i++) {
+					var topic_name = received_info[i];
+					var el = document.createElement("option");
+					el.textContent = topic_name;
+					el.value = topic_name;
+					rostopic_dropdown_element.appendChild(el);
+				}
+			});
 
-</script>
+		</script>
+	</body>
+</html>

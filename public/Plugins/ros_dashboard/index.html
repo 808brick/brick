@@ -1,159 +1,157 @@
-<head>
-	<link rel="stylesheet" href="../../CSS/semantic/src/semantic.min.css">
-	<link rel="stylesheet" href="style.css">
-	<link rel="javascript" href="dropdown_options.js">
-	<script>
-		// Fix jQuery not being defined
-		// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
-		// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
-		//
-		// delete window.exports;
-		// delete window.module;
-	</script>
-	<script src="../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
-	<script>
-		// Fix jQuery not being defined
-		// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
-		// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+<html>
+	<head>
+		<link rel="stylesheet" href="../../CSS/semantic/src/semantic.min.css">
+		<link rel="stylesheet" href="style.css">
+		<link rel="javascript" href="dropdown_options.js">
+		<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+			//
+			// delete window.exports;
+			// delete window.module;
 
-		try {
-			$ = jQuery = module.exports;
-			// If you want module.exports to be empty, uncomment:
-			// module.exports = {};
-		} catch (e) {}
-	</script>
-	<script src="../../CSS/semantic/src/semantic.min.js"></script>
-</head>
+		</script>
+		<script src="../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+		<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
 
-<body>
+			try {
+				$ = jQuery = module.exports;
+				// If you want module.exports to be empty, uncomment:
+				// module.exports = {};
+			} catch (e) {}
 
-	<div style="width: 100vw, height: 100vh; display: flex; flex-direction: column;">
-		<!-- Status bar -->
-		<div style="width: 100%; height: 5%; background-color: blue;">
-			Status bar
-			<div style="float: left; vertical-align: middle;">
-				<button class="small ui button">Refresh IPC</button>
+		</script>
+		<script src="../../CSS/semantic/src/semantic.min.js"></script>
+	</head>
+
+	<body>
+
+		<div style="width: 100vw; height: 100vh; display: flex; flex-direction: column;">
+			<!-- Status bar -->
+			<div style="width: 100%; height: 5%; background: #2979FF; color: #FFF;">
+				Status bar
+				<div style="float: left; vertical-align: middle;">
+					<button class="small ui button">Refresh IPC</button>
+				</div>
+			</div>
+			<!-- Top row -->
+			<div class="view-row">
+
+				<!-- Left box -->
+				<div class="view">
+					<select class="ui dropdown">
+						<option selected>-- Select Display --</option>
+					</select>
+					<iframe class="frame" src=""></iframe>
+				</div>
+				<!--		 Right box -->
+				<div class="view">
+					<select class="ui dropdown">
+						<option selected>-- Select Display --</option>
+					</select>
+					<iframe class="frame" src=""></iframe>
+				</div>
+			</div>
+
+			<!-- Bottom row -->
+			<div class="view-row">
+				<!--	 	Left box -->
+				<div class="view">
+					<select class="ui dropdown">
+						<option selected>-- Select Display --</option>
+					</select>
+					<iframe class="frame" src=""></iframe>
+				</div>
+				<!-- Right box -->
+				<div class="view">
+					<select class="ui dropdown">
+						<option selected>-- Select Display --</option>
+					</select>
+					<iframe class="frame" src=""></iframe>
+				</div>
 			</div>
 		</div>
-		<!-- Top row -->
-		<div class="view-row">
 
-			<!-- Left box -->
-			<div class="view">
-				<select class="ui dropdown">
-					<option selected>-- Select Display --</option>
-				</select>
-				<iframe class="frame" src=""></iframe>
-			</div>
-			<!--		 Right box -->
-			<div class="view">
-				<select class="ui dropdown">
-					<option selected>-- Select Display --</option>
-				</select>
-				<iframe class="frame" src=""></iframe>
-			</div>
-		</div>
+		<script>
+			// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
+			//	$('.ui.dropdown').dropdown();
 
-		<!-- Bottom row -->
-		<div class="view-row">
-			<!--	 	Left box -->
-			<div class="view">
-				<select class="ui dropdown">
-					<option selected>-- Select Display --</option>
-				</select>
-				<iframe class="frame" src=""></iframe>
-			</div>
-			<!-- Right box -->
-			<div class="view">
-				<select class="ui dropdown">
-					<option selected>-- Select Display --</option>
-				</select>
-				<iframe class="frame" src=""></iframe>
-			</div>
-		</div>
-	</div>
-</body>
+			const displayDirectory = '../ros_dashboard/assets/Display_templates/';
+			const viewOptions = [
+				{label: 'Image Viewer', source: 'image_viewer'},
+				{label: 'Topic Table', source: 'topic_table'},
+				{label: 'Communication', source: 'communications'},
+				{label: 'ROS Tools', source: 'ros_tools'},
+				{label: 'Mapping', source: 'mapping'},
+			];
 
-<script>
-	// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
-	//	$('.ui.dropdown').dropdown();
+			// Make dropdowns change content of views
+			const views = document.getElementsByClassName("view");
+			for (let view of views) {
+				let dropdown = view.children[0];
+				let viewFrame = view.children[1];
 
-	const displayDirectory = '../ros_dashboard/assets/Display_templates/';
-	const viewOptions = [
-		{label: 'Image Viewer', source: 'image_viewer'},
-		{label: 'Topic Table', source: 'topic_table'},
-		{label: 'Communication', source: 'communications'},
-		{label: 'ROS Tools', source: 'ros_tools'},
-		{label: 'Mapping', source: 'mapping'},
-		{label: 'Topic 1', source: 'topic'},
-		{label: 'Topic 2', source: 'topic'},
-		{label: 'Topic 3', source: 'topic'},
-		{label: 'Topic 4', source: 'topic'},
-		{label: 'Topic 5', source: 'topic'}
-	];
+				for (let viewOption of viewOptions) {
+					let option = document.createElement("option");
+					option.innerText = viewOption.label;
+					option.value = `${displayDirectory}${viewOption.source}.html`;
 
-	// Make dropdowns change content of views
-	const views = document.getElementsByClassName("view");
-	for (let view of views) {
-		let dropdown = view.children[0];
-		let viewFrame = view.children[1];
+					dropdown.appendChild(option);
+				}
 
-		for (let viewOption of viewOptions) {
-			let option = document.createElement("option");
-			option.innerText = viewOption.label;
-			option.value = `${displayDirectory}${viewOption.source}.html`;
+				$(dropdown).dropdown({
+					onChange: (value) => {
+						viewFrame.src = value;
+					}
+				});
 
-			dropdown.appendChild(option);
-		}
-
-		$(dropdown).dropdown({
-			onChange: (value) => {
-				viewFrame.src = value;
 			}
-		});
 
-	}
+			const electron = require('electron');
+			const {ipcRenderer} = electron;
 
-	const electron = require('electron');
-	const { ipcRenderer } = electron;
+			let rowCount = 3;
 
-	let rowCount = 3;
-
-	// document.getElementById("topic1").onclick = function() {
-	// 	var iframe1 = document.getElementById("iframe1");
-	// 	iframe1.src = "./assets/Display_templates/image_viewer.html"
-	// }
+			// document.getElementById("topic1").onclick = function() {
+			// 	let iframe1 = document.getElementById("iframe1");
+			// 	iframe1.src = "./assets/Display_templates/image_viewer.html"
+			// }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//Raymonds Shit
+			////////////////////////////////////////////////////////////////////////////////
+			//Raymonds Shit
 
-let topic_list = [];
+			let topic_list = [];
 
-ipcRenderer.on('rostopic_list', (event, received_info) => {
-    	// div1.innerHTML = received_info;
+			ipcRenderer.on('rostopic_list', (event, received_info) => {
+				// div1.innerHTML = received_info;
 
-    	// topics_to_record = [];
+				// topics_to_record = [];
 
-			topic_list = received_info;
+				topic_list = received_info;
 
-    	rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
-    // 	rostopic_dropdown_element.disabled = false;
-    // 	document.getElementById("remove_topic").disabled = false;
-		// document.getElementById("clear_topics").disabled = false;
-    // 	document.getElementById("add_topic").disabled = false;
-    	rostopic_dropdown_element.options.length = 0
-		for(var i = 0; i < received_info.length; i++) {
-			var topic_name = received_info[i];
-		    var el = document.createElement("option");
-		    el.textContent = topic_name;
-		    el.value = topic_name;
-		    rostopic_dropdown_element.appendChild(el);
-	    }
-	});
-
-
-////////////////////////////////////////////////////////////////////////////////
+				rostopic_dropdown_element = document.getElementById('add_topic_dropdown');
+				// 	rostopic_dropdown_element.disabled = false;
+				// 	document.getElementById("remove_topic").disabled = false;
+				// document.getElementById("clear_topics").disabled = false;
+				// 	document.getElementById("add_topic").disabled = false;
+				rostopic_dropdown_element.options.length = 0
+				for (let i = 0; i < received_info.length; i++) {
+					let topic_name = received_info[i];
+					let el = document.createElement("option");
+					el.textContent = topic_name;
+					el.value = topic_name;
+					rostopic_dropdown_element.appendChild(el);
+				}
+			});
 
 
-</script>
+			////////////////////////////////////////////////////////////////////////////////
+
+		</script>
+	</body>
+</html>

@@ -5,17 +5,20 @@
 			<img id="video" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed">
 		</div>
 		<script>
+			// Resize the video to fill the whole frame, without distortion
 			let video = document.getElementById("video");
 			let animFrameHandle = undefined;
 			let videoRatio;
 
 			function resizeVideo() {
-				cancelAnimationFrame(animFrameHandle);
 				animFrameHandle = undefined;
 
 				let documentBounds = document.body.getBoundingClientRect();
 				let documentRatio = documentBounds.width / documentBounds.height;
 
+				video.style.height = "";
+				video.style.width = "";
+				
 				if (videoRatio < documentRatio) {
 					// Constrain video by height
 					video.style.height = documentBounds.height;
@@ -23,13 +26,12 @@
 					video.style.width = documentBounds.width;
 				}
 			}
-
-			animFrameHandle = requestAnimationFrame(() => {
+			
+			function initVideoSize() {
 				let videoBounds = video.getBoundingClientRect();
-				console.log(videoBounds);
 
 				if (videoBounds.width != 0 && videoBounds.height != 0) {
-					cancelAnimationFrame(animFrameHandle);
+					animFrameHandle = undefined;
 					videoRatio = videoBounds.width / videoBounds.height;
 
 					// Resize video on window resize
@@ -44,8 +46,14 @@
 						// animFrameHandle = setTimeout(resizeVideo, 10);
 						animFrameHandle = requestAnimationFrame(resizeVideo);
 					});
+					
+					animFrameHandle = requestAnimationFrame(resizeVideo);
+				} else {
+					animFrameHandle = requestAnimationFrame(initVideoSize);
 				}
-			});
+			}
+
+			animFrameHandle = requestAnimationFrame(initVideoSize);
 		</script>
 	</body>
 </html>

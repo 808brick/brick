@@ -3,7 +3,7 @@
 		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 	</head>
 	<body>
-		<h3> ROS Tools </h3> <br><br>
+		<h3> ROS Tools </h3>
 
 		<p id="launch_file_upload_p_tag">Choose Launch File: </p>
 		<img id="file_upload" src="../images/folder.png">
@@ -15,6 +15,8 @@
 			<option>Hit Ros Launch List Button ...</option>
 		</select>
 		<button id="ros launch dropdown button">Launch</button>
+		<br>
+		<button id="ros node kill">Kill all ROS Nodes</button>
 
 		<br> <br>
 		<hr>
@@ -32,7 +34,7 @@
 		<button id="add_topic">+</button>
 		<button id="remove_topic">-</button>
 		<br>
-		<button id="clear_topics">clear topics</button>
+		<!-- <button id="clear_topics">clear topics</button> -->
 		<br>
 
 		<br>
@@ -67,7 +69,7 @@
 			document.getElementById('rosbag_topic_dropdown').disabled = true;
 			document.getElementById("add_topic").disabled = true;
 			document.getElementById("remove_topic").disabled = true;
-			document.getElementById("clear_topics").disabled = true;
+			// document.getElementById("clear_topics").disabled = true;
 			document.getElementById("reocord_bag").disabled = true;
 			document.getElementById("stop_recording_bag").disabled = true;
 
@@ -129,15 +131,21 @@
 				console.log("ROS topics requested");
 			};
 
+			document.getElementById("ros node kill").onclick = function(){
+				ipcRenderer.send('ros_node_kill', 'kill all nodes');
+				console.log("requesting to kill all ros nodes");
+			};
+
 			ipcRenderer.on('rostopic_list', (event, received_info) => {
 				div1.innerHTML = received_info;
+				console.log("Checking for rostopic list call from ros tools template html")
 
 				topics_to_record = [];
 
 				rostopic_dropdown_element = document.getElementById('rosbag_topic_dropdown');
 				rostopic_dropdown_element.disabled = false;
 				document.getElementById("remove_topic").disabled = false;
-				document.getElementById("clear_topics").disabled = false;
+				// document.getElementById("clear_topics").disabled = false;
 				document.getElementById("add_topic").disabled = false;
 				rostopic_dropdown_element.options.length = 0
 				for (var i = 0; i < received_info.length; i++) {
@@ -148,6 +156,27 @@
 					rostopic_dropdown_element.appendChild(el);
 				}
 			});
+
+			ipcRenderer.on('bag_file_save_folder', (event, received_info) => {
+    		bag_file_save_p_tag.innerHTML = "Choose Save Location: \t" + received_info;
+    		rosbag_record_save_location = received_info;
+			});
+
+			ipcRenderer.on('roslaunch_list', (event, received_info) => {
+		    	launch_file_dropdown_element = document.getElementById('launch_file_dropdown');
+		    	launch_file_dropdown_element.disabled = false;
+		    	document.getElementById("ros launch dropdown button").disabled = false;
+		    	launch_file_dropdown_element.remove(0)
+				for(var i = 0; i < received_info.length; i++) {
+					var package_name = received_info[i][0];
+					var launch_file_name = received_info[i][1]
+				    var el = document.createElement("option");
+				    el.textContent = package_name + " : " + launch_file_name;
+				    el.value = package_name + " " + launch_file_name;
+				    launch_file_dropdown_element.appendChild(el);
+				}
+			});
+
 		</script>
 	</body>
 </html>

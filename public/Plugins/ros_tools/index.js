@@ -78,7 +78,7 @@ function main(mainWindow, ipcMain){
         console.log(stdout);
         console.log(stderr);
       })
-    }); 
+    });
     ipcMain.on('ros_launch', (event, text) => {
       console.log(text);
       exec("roslaunch usb_cam usb_cam-test.launch", (err, stdout, stderr) => {
@@ -86,7 +86,7 @@ function main(mainWindow, ipcMain){
       // console.log(stdout);
       // console.log(stderr);
     })
-    }); 
+    });
     ipcMain.on('ros_launch_debug', (event, text) => {
       console.log(text);
       exec("roslaunch usb_cam usb_cam-test.launch", (err, stdout, stderr) => {
@@ -94,7 +94,7 @@ function main(mainWindow, ipcMain){
       console.log(stdout);
       console.log(stderr);
     })
-    }); 
+    });
     ipcMain.on('ros_node_kill', (event, text) => {
       console.log("Killing all ROS nodes");
       exec("rosnode kill -a", (err, stdout, stderr) => {
@@ -102,7 +102,7 @@ function main(mainWindow, ipcMain){
       // console.log(stdout);
       // console.log(stderr);
     })
-    }); 
+    });
     ipcMain.on('ros_source', (event, text) => {
       console.log("Sorucing specified file");
       exec("echo 'source ~/velodyne_ws/devel/setup.bash' >> ~/.bashrc", (err, stdout, stderr) => {
@@ -110,7 +110,7 @@ function main(mainWindow, ipcMain){
       console.log(stdout);
       console.log(stderr);
     })
-    }); 
+    });
 
     function roslaunch_list(callback){
       exec("rospack list", (err, stdout, stderr) => {
@@ -157,14 +157,14 @@ function main(mainWindow, ipcMain){
       console.log(stdout);
       // console.log(stderr);
     })
-    }); 
+    });
     ipcMain.on('stop_video_server', (event, text) => {
       exec("pkill web_video_serve", (err, stdout, stderr) => {
       //   console.log(err)
       console.log(stdout);
       // console.log(stderr);
     })
-    }); 
+    });
 
     ipcMain.on('map_server_start', (event, text) => {
       exec("sudo service docker start", (err, stdout, stderr) => {
@@ -188,7 +188,7 @@ function main(mainWindow, ipcMain){
         })
       }
     })
-      
+
     });
     ipcMain.on('map_server_stop', (event, text) => {
       console.log(text);
@@ -197,12 +197,12 @@ function main(mainWindow, ipcMain){
       console.log(stdout);
       console.log(stderr);
     })
-    }); 
+    });
 
     ipcMain.on('launch_file_upload', (event, text) => {
-      
+
       var launch_file = dialog.showOpenDialog({properties: ['openFile'] })
-      console.log(launch_file) 
+      console.log(launch_file)
 
       if (launch_file != undefined){
         mainWindow.webContents.send('launch_file_upload', launch_file[0]);
@@ -232,32 +232,32 @@ function main(mainWindow, ipcMain){
     })
 
     ipcMain.on('bag_file_save_folder', (event, text) => {
-      
+
       var launch_folder = dialog.showOpenDialog({properties: ['openDirectory'] })
-      console.log(launch_folder) 
+      console.log(launch_folder)
       if (launch_folder != undefined){
         mainWindow.webContents.send('bag_file_save_folder', launch_folder[0]);
       }
     })
 
     ipcMain.on('bag_file_play_location', (event, text) => {
-      
+
       var launch_folder = dialog.showOpenDialog({properties: ['openFile'] })
-      console.log(launch_folder) 
+      console.log(launch_folder)
       if (launch_folder != undefined){
         mainWindow.webContents.send('launch_save_path', launch_folder[0]);
       }
     })
 
     ipcMain.on('record_bag', (event, info_array) => {
-      
+
       // console.log(info_array);
       var command_str = "rosbag record --split --size=";
       command_str += info_array[0];
       command_str += ' -o ' + info_array[2] + '/ ';
       topic_list = info_array[1]
       topic_list = topic_list.toString();
-      topic_list = topic_list.replace(/,/, ' ');
+      topic_list = topic_list.replace(/,/g, ' ');
       command_str += topic_list;
       command_str += " __name:=gui_bag_recording";
       console.log(command_str);
@@ -275,10 +275,7 @@ function main(mainWindow, ipcMain){
           console.log(stdout);
           // console.log(stderr);
         })
-      
     })
-
-    
 }
 
 // ros_subscriber();
@@ -287,4 +284,3 @@ function test(text){
   console.log(text);
   console.log("End");
 }
-

@@ -12,11 +12,16 @@
 
   <div id="mapid" style="width: 100%; height: 400px;"></div>
   <button id="Refresh IPC">Refresh IPC</button>
+  <button id="start map server">Start Map Server</button>
+  <button id="stop map server">Stop Map Server</button>
+  <button id="refresh map">Refresh Map</button>
 
   <ul>
   </ul>
 
 <script>
+
+  require = parent.require;
 
 	// let i = 0;
 	//21.3407/-157.9034
@@ -50,7 +55,7 @@
 	// var marker = L.marker([21.3114616667, -157.889675]).addTo(mymap);
 
 	var greenIcon = L.icon({
-    iconUrl: 'wamv_drawing2.png',
+    iconUrl: '../images/wamv_drawing2.png',
 
     iconSize:     [32, 45], // size of the icon
     iconAnchor:   [16, 16], // point of the icon which will correspond to marker's location
@@ -108,6 +113,26 @@
   	// console.log(i);
 
  });
+
+
+ document.getElementById("start map server").onclick = function(){
+		ipcRenderer.send('map_server_start', 'start map server');
+		console.log("map server start requested");
+	};
+	document.getElementById("stop map server").onclick = function(){
+		ipcRenderer.send('map_server_stop', 'stop map server');
+		console.log("map server stop requested");
+	};
+
+  document.getElementById("refresh map").onclick = function(){
+		// ipcRenderer.send("refresh_map", 'refresh map');
+		console.log('refreshing map div');
+
+    L.tileLayer('http://localhost:8082/styles/klokantech-basic/{z}/{x}/{y}.png', {
+  		maxZoom: 18,
+  		id: 'mapbox.streets'
+  	}).addTo(mymap);
+	};
 
 
 </script>

@@ -91,7 +91,7 @@
 	};
 	// document.getElementById('Refresh IPC').click();
 	
-	ipcRenderer.on('wamvGps', (event, received_info) => {  
+	ipcRenderer.on('/wamvGps', (event, received_info) => {  
 		console.log("Wamv gPS event recieved");
 		// const p = document.createElement('p');
 		// const text = document.createTextNode(received_info);

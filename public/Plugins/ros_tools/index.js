@@ -254,10 +254,10 @@ function main(mainWindow, ipcMain){
       // console.log(info_array);
       var command_str = "rosbag record --split --size=";
       command_str += info_array[0];
-      command_str += ' -o ' + info_array[2] + '/ ';
+      command_str += ' -o ' + info_array[2] + ' ';
       topic_list = info_array[1]
       topic_list = topic_list.toString();
-      topic_list = topic_list.replace(/,/, ' ');
+      topic_list = topic_list.replace(/,/g, ' ');
       command_str += topic_list;
       command_str += " __name:=gui_bag_recording";
       console.log(command_str);

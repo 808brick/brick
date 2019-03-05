@@ -1,6 +1,9 @@
 <html>
 	<body style="margin: 0; padding: 0; width: 100vw; height: 100vh;">
 		<div style="width: 100%; height: 100%">
+			<select id="image_viewer_topic_dropdown">
+		    <option>Select a Image topic ...</option>
+		  </select>
 <!--			<iframe style="flex: 1; /*width: 100%; height: 100%*/" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed"></iframe>-->
 			<img id="video" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed">
 		</div>
@@ -18,7 +21,7 @@
 
 				video.style.height = "";
 				video.style.width = "";
-				
+
 				if (videoRatio < documentRatio) {
 					// Constrain video by height
 					video.style.height = documentBounds.height;
@@ -26,7 +29,7 @@
 					video.style.width = documentBounds.width;
 				}
 			}
-			
+
 			function initVideoSize() {
 				let videoBounds = video.getBoundingClientRect();
 
@@ -46,7 +49,7 @@
 						// animFrameHandle = setTimeout(resizeVideo, 10);
 						animFrameHandle = requestAnimationFrame(resizeVideo);
 					});
-					
+
 					animFrameHandle = requestAnimationFrame(resizeVideo);
 				} else {
 					animFrameHandle = requestAnimationFrame(initVideoSize);

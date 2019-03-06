@@ -14,8 +14,6 @@ let first_time_init = false;
 
 const { app, BrowserWindow, Menu , ipcMain} = electron;
 
-
-
 let mainWindow;
 let sub;
 
@@ -68,13 +66,13 @@ function function1(){
     }
 
 
-}); 
+});
 }
 
 ipcMain.on('ipc_init', (event, text) => {;
   console.log(text);
   mainWindow.webContents.send('ipc_init', "IPC Started JS");
-  
+
 });
 
 const menuTemplate = [
@@ -149,7 +147,7 @@ const menuTemplate = [
       },
     ]
   },
-  
+
 
   {
     label: 'Plugins',
@@ -171,7 +169,7 @@ const menuTemplate = [
 function init_plugins_menu(Menu){
   const fs = require('fs');
 
-  let plugindata = fs.readFileSync('plugins.json');  
+  let plugindata = fs.readFileSync('plugins.json');
   plugindata = JSON.parse(plugindata);
 
   for (var plugin in plugindata){
@@ -183,9 +181,9 @@ function init_plugins_menu(Menu){
         "label": plugin_name,
         "plugin_folder": plugin_folder,
         click(menuItem, browserWindow, event){
-          plugin_require = require('./public/Plugins/' + menuItem.plugin_folder + '/index.js'); 
+          plugin_require = require('./public/Plugins/' + menuItem.plugin_folder + '/index.js');
           plugin_require.main(mainWindow, ipcMain);
-        }   
+        }
       } //End of submenu
       menuTemplate[4]["submenu"].unshift(plugin_submenu);
   } //End of for loop
@@ -196,8 +194,8 @@ function init_plugins_menu(Menu){
 function check_for_new_plugins(path, Menu){
 
   var plugin_directories = fs.readdirSync(path);
-  plugindata = fs.readFileSync('plugins.json');  
-  plugindata = JSON.parse(plugindata); 
+  plugindata = fs.readFileSync('plugins.json');
+  plugindata = JSON.parse(plugindata);
   var plugin_json_directories = [];
   for (var plugin in plugindata){
     plugin_json_directories.push(plugin);
@@ -212,23 +210,23 @@ function check_for_new_plugins(path, Menu){
 
       if (fs.existsSync('./public/Plugins/'+plugin+'/plugin_info.json')) {
         plugindata = fs.readFileSync('./public/Plugins/'+plugin+'/plugin_info.json');
-        plugindata = JSON.parse(plugindata); 
+        plugindata = JSON.parse(plugindata);
         all_plugin_info[plugin] = {"name" : plugindata["name"], "repo" : plugindata["repo"], "plugin_folder" : plugindata["plugin_folder"]};
       }
-        
+
     }
-    
+
     all_plugin_info = JSON.stringify(all_plugin_info, null, "\t");
-    fs.writeFile('plugins.json', all_plugin_info, (err) => {  
+    fs.writeFile('plugins.json', all_plugin_info, (err) => {
       if (err) {throw err; console.log("Error"); console.log(err);}
           console.log('plugins.json file updated');
           init_plugins_menu(Menu);
-          
+
       });
   } else {
     init_plugins_menu(Menu);
   }
-  
+
 }
 
 
@@ -239,4 +237,3 @@ function rostopic_list(callback){
     callback(res);
 })
 }
-

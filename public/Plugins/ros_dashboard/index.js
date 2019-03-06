@@ -227,6 +227,22 @@ function roslaunch_list(callback){
     })
     });
 
+    ipcMain.on('image_topics', (event, text) => {
+      console.log(text);
+
+      exec("rostopic find sensor_msgs/CompressedImage && rostopic find sensor_msgs/Image", (err, stdout, stderr) => {
+        // console.log(err);
+      console.log(stdout);
+      console.log(stderr);
+
+      var res = stdout.split("\n");
+      res.splice(-1,1);
+      mainWindow.webContents.send('image_topics',res);
+    });
+    });
+
+
+
     // ipcMain.on('refresh_map', (event, text) => {
     //
     // });

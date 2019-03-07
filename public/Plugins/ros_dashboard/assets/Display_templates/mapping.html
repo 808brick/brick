@@ -1,27 +1,43 @@
 <head>
+	<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
+	<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+	<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+	<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+		try {
+			$ = jQuery = module.exports;
+			// If you want module.exports to be empty, uncomment:
+			// module.exports = {};
+		} catch (e) {}
+
+	</script>
+	<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
   <meta charset="utf-8" />
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
-      <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
 </head>
 
 <body>
 
   <div id="mapid" style="width: 100%; height: 400px;"></div>
   <div id="map_message_div"></div>
-  <button id="Refresh IPC">Refresh IPC</button>
-  <button id="start map server">Start Map Server</button>
-  <button id="stop map server">Stop Map Server</button>
-  <button id="refresh map">Refresh Map</button>
+  <button class="ui button" id="Refresh IPC">Refresh IPC</button>
+  <button class="ui button" id="start map server">Start Map Server</button>
+  <button class="ui button" id="stop map server">Stop Map Server</button>
+  <button class="ui button" id="refresh map">Refresh Map</button>
 
   <div>
-  <img style="float:left; height:24px; padding-right: 10px;" src="../images/wamv_drawing2.png" />
-  <select id="gps_topic_dropdown1">
-    <option>Select a GPS topic ...</option>
-  </select>
+  	<img style="float:left; height:24px; padding-right: 10px;" src="../images/wamv_drawing2.png" />
+  	<select class="ui dropdown" id="gps_topic_dropdown1">
+    	<option>Select a GPS topic ...</option>
+  	</select>
   </div>
 
   <!-- <img src="../images/wamv_drawing2.png" />

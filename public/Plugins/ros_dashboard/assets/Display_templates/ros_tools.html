@@ -1,48 +1,85 @@
 <html>
 	<head>
 		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+		<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
+		<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+		<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+			try {
+				$ = jQuery = module.exports;
+				// If you want module.exports to be empty, uncomment:
+				// module.exports = {};
+			} catch (e) {}
+
+		</script>
+		<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
 	</head>
-	<body>
-		<h3> ROS Tools </h3>
+	<body style="margin: 10px;">
+		<div class="ui two column grid">
+			<div class="column">
+				<div class="ui raised fluid card">
+					<div class="content">
+						<div class="header">ROS Tools</div>
+					</div>
+				<div class="content">
+					<p id="launch_file_upload_p_tag">Choose Launch File: </p>
+					<img id="file_upload" src="../images/folder.png">
 
-		<p id="launch_file_upload_p_tag">Choose Launch File: </p>
-		<img id="file_upload" src="../images/folder.png">
+					<br><br>
+					<button class="ui button" id="roslaunch list">ROS Launch List</button>
+					<p>Select A Launch File from Dropdown: </p>
 
-		<br><br>
-		<button id="roslaunch list">ROS Launch List</button>
-		<p>Select A Launch File from Dropdown: </p>
-		<select id="launch_file_dropdown">
-			<option>Hit Ros Launch List Button ...</option>
-		</select>
-		<button id="ros launch dropdown button">Launch</button>
-		<br>
-		<button id="ros node kill">Kill all ROS Nodes</button>
+					<select class="ui dropdown" id="launch_file_dropdown">
+						<option>Hit Ros Launch List Button ...</option>
+					</select>
 
-		<br> <br>
-		<hr>
-		<p>ROS Bag record</p>
-		<p id="bag_file_save_p_tag">Choose Save Location: </p>
-		<img id="bag_directory" src="../images/folder.png">
-		<br><button id="rostopic button">ROS topic list</button>
-		<div id="div1"></div><br>
+					<button class="ui button" id="ros launch dropdown button">Launch</button>
+					<br>
+					<button class="ui button" id="ros node kill" style="margin-top: 10px;">Kill all ROS Nodes</button>
 
-		<p id="add_topic_p_tag">Add a topic to Record: </p>
-		<select id="rosbag_topic_dropdown">
-			<option>Hit Ros topic List Button ...</option>
-		</select>
-		<!-- <img id="add_topic" src="/images/folder.png"> -->
-		<button id="add_topic">+</button>
-		<button id="remove_topic">-</button>
-		<br>
-		<!-- <button id="clear_topics">clear topics</button> -->
-		<br>
+					<br> <br>
+	`			</div>
+			</div>
+			</div>
 
-		<br>
-		<input type="number" id="bag_file_size" value=200 style="width:70px;">
-		<label>Max size of each bagfile (in MB) </label>
-		<br><br>
-		<button id="reocord_bag">Record</button>
-		<button id="stop_recording_bag">Stop Recording</button>
+<div class="column">
+	<div class="ui raised fluid card">
+		<div class="content">
+			<div class="header">ROS Bag record</div>
+		</div>
+			<div class="content">
+				<p id="bag_file_save_p_tag">Choose Save Location: </p>
+				<img id="bag_directory" src="../images/folder.png">
+				<br><button class="ui button" id="rostopic button">ROS topic list</button>
+				<div id="div1"></div><br>
+
+				<p id="add_topic_p_tag">Add a topic to Record: </p>
+				<select class="ui dropdown" id="rosbag_topic_dropdown">
+					<option>Hit Ros topic List Button ...</option>
+				</select>
+				<!-- <img id="add_topic" src="/images/folder.png"> -->
+				<button class="ui button" id="add_topic">+</button>
+				<button class="ui button" id="remove_topic">-</button>
+				<br>
+				<!-- <button id="clear_topics">clear topics</button> -->
+				<br>
+				<div class="ui input">
+				 	<input type="number" id="bag_file_size" value=200 style="width:70px;">
+				 </div>
+				<div class="ui left pointing label">
+					Max size of each bagfile (in MB) 
+				</div>
+				<br><br>
+				<button class="ui button" id="record_bag">Record</button>
+				<button class="ui button" id="stop_recording_bag">Stop Recording</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 		<script>
 			// Use the correct require function
@@ -70,7 +107,7 @@
 			document.getElementById("add_topic").disabled = true;
 			document.getElementById("remove_topic").disabled = true;
 			// document.getElementById("clear_topics").disabled = true;
-			document.getElementById("reocord_bag").disabled = true;
+			document.getElementById("record_bag").disabled = true;
 			document.getElementById("stop_recording_bag").disabled = true;
 
 
@@ -87,7 +124,7 @@
 
 			document.getElementById("bag_directory").onclick = function() {
 				ipcRenderer.send('bag_file_save_folder', 'save bag file');
-				document.getElementById("reocord_bag").disabled = false;
+				document.getElementById("record_bag").disabled = false;
 				// document.getElementById("stop_recording_bag").disabled = false;
 				console.log("Selecting bag file save location ...");
 
@@ -98,18 +135,23 @@
 				var value = dropdown_option.options[dropdown_option.selectedIndex].value
 				topics_to_record.push(value)
 				console.log("adding topic ..." + value);
-				document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topics_to_record.toString();
+				var topic_to_record_string = topics_to_record.toString();
+				topic_to_record_string = topic_to_record_string.replace(/,/g, ", ")
+				console.log(topic_to_record_string);
+				document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topic_to_record_string;
 			};
 
 			document.getElementById("remove_topic").onclick = function() {
 				console.log("Removing Last topic ...");
 				topics_to_record.pop();
-				document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topics_to_record.toString();
+				var topic_to_record_string = topics_to_record.toString();
+				topic_to_record_string = topic_to_record_string.replace(/,/g, ", ")
+				document.getElementById('add_topic_p_tag').innerHTML = "Add a topic to Record: " + topic_to_record_string;
 
 			};
 
-			document.getElementById("reocord_bag").onclick = function() {
-				document.getElementById("reocord_bag").disabled = true;
+			document.getElementById("record_bag").onclick = function() {
+				document.getElementById("record_bag").disabled = true;
 				document.getElementById("stop_recording_bag").disabled = false;
 				console.log("Recording bag file ...");
 				var size = document.getElementById("bag_file_size").value
@@ -119,7 +161,7 @@
 			};
 
 			document.getElementById("stop_recording_bag").onclick = function() {
-				document.getElementById("reocord_bag").disabled = false;
+				document.getElementById("record_bag").disabled = false;
 				document.getElementById("stop_recording_bag").disabled = true;
 				console.log("Stopping bag file recording ...");
 				ipcRenderer.send('stop_bag_recording', 'stop recording bag file');
@@ -137,7 +179,7 @@
 			};
 
 			ipcRenderer.on('rostopic_list', (event, received_info) => {
-				div1.innerHTML = received_info;
+				// div1.innerHTML = received_info;
 				console.log("Checking for rostopic list call from ros tools template html")
 
 				topics_to_record = [];

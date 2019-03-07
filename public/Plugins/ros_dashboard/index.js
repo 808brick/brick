@@ -22,7 +22,7 @@ function ros_subscriber(mainWindow){
       // Create ROS subscriber on the 'chatter' topic expecting String messages
       sub = rosNode.subscribe('/chatter', std_msgs.String,
         (data) => { // define callback execution
-    	  mainWindow.webContents.send('test_ros_topic', data.data);
+        mainWindow.webContents.send('test_ros_topic', data.data);
           // console.log(data.data);
           // console.log(typeof data.data);
         }
@@ -239,6 +239,29 @@ function roslaunch_list(callback){
       res.splice(-1,1);
       mainWindow.webContents.send('image_topics',res);
     });
+    });
+
+    ipcMain.on('gps_topics', (event, text) => {
+      console.log("Gps topics index js called")
+      console.log(text);
+
+      exec("rostopic find sensor_msgs/NavSatFix", (err, stdout, stderr) => {
+        // console.log(err);
+      console.log(stdout);
+      console.log(stderr);
+
+      var res = stdout.split("\n");
+      res.splice(-1,1);
+      mainWindow.webContents.send('gps_topics',res);
+    });
+    });
+
+    ipcMain.on('start_video_server', (event, text) => {
+      exec("rosrun web_video_server web_video_server", (err, stdout, stderr) => {
+      //   console.log(err)
+      console.log(stdout);
+      // console.log(stderr);
+    })
     });
 
 

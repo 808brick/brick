@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "start": "gnome-terminal -- roscore & rosrun web_video_server web_video_server & nodejs talker.js & rosbag play -l -q ./public/Plugins/test_ros_subscriber/test_bag.bag & electron .",
     "electron": "electron .",
     "electron-rebuild": "electron-rebuild -w opencv4nodejs",
     "launch-test": "gnome-terminal -- roscore && gnome-terminal -- nodejs talker.js && gnome-terminal -- electron .",

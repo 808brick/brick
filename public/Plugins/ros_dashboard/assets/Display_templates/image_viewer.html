@@ -1,12 +1,30 @@
 <html>
+	<head>
+		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+		<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
+		<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+		<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+		<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+			try {
+				$ = jQuery = module.exports;
+				// If you want module.exports to be empty, uncomment:
+				// module.exports = {};
+			} catch (e) {}
+
+		</script>
+		<script src="../../../../CSS/semantic/src/semantic.min.js"></script>
+	</head>
+
 	<body style="margin: 0; padding: 0; width: 100vw; height: 100vh;">
 		<div style="width: 100%; height: 100%">
 			<select id="image_viewer_topic_dropdown">
-		    <option>Select a Image topic ...</option>
-		  </select>
-<!--			<iframe style="flex: 1; /*width: 100%; height: 100%*/" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed"></iframe>-->
-			<!-- <iframe id="video1" src="" /> -->
-			<img id="video" src="http://localhost:8080/stream?topic=/usb_cam/image_raw&type=ros_compressed">
+				<option>Select an image topic ...</option>
+			</select>
+			<img id="video" src="">
 		</div>
 		<script>
 			// Resize the video to fill the whole frame, without distortion
@@ -57,51 +75,55 @@
 				}
 			}
 
-			animFrameHandle = requestAnimationFrame(initVideoSize);
-
-
+			let rostopic_dropdown_element = document.getElementById('image_viewer_topic_dropdown');
 			require = parent.require;
 
 			const electron = require('electron');
 
-			const { ipcRenderer	} = electron;
+			const {ipcRenderer} = electron;
 
 			ipcRenderer.send("image_topics", "get image topics");
 
 			ipcRenderer.on('image_topics', (event, received_info) => {
-				rostopic_dropdown_element = document.getElementById('image_viewer_topic_dropdown');
 				// rostopic_dropdown_element.disabled = false;
 				// document.getElementById("remove_topic").disabled = false;
 				// document.getElementById("clear_topics").disabled = false;
 				// document.getElementById("add_topic").disabled = false;
 				// rostopic_dropdown_element.options.length = 0
-				for (var i = 0; i < received_info.length; i++) {
-					var topic_name = received_info[i];
-					var el = document.createElement("option");
+				for (let i = 0; i < received_info.length; i++) {
+					let topic_name = received_info[i];
+					let el = document.createElement("option");
 					el.textContent = topic_name;
 					el.value = topic_name;
 					rostopic_dropdown_element.appendChild(el);
 				}
-			})
+				
+				// Reselect disabled item
+				rostopic_dropdown_element.selectedIndex = 0;
+			});
 
-			document.getElementById("image_viewer_topic_dropdown").onclick = function() {
-			// document.getElementByTagName("option").onclick = function() {
-				console.log("Option clicked")
-				var dropdown_option = document.getElementById("image_viewer_topic_dropdown");
-				var value = dropdown_option.options[dropdown_option.selectedIndex].value;
+			// Initialize the video selector dropdown
+			$('select').dropdown({
+				onChange: (value) => {
+					console.log("Option clicked");
 
-				var topic_split = value.split("/compressed")
+					let topic_split = value.split("/compressed");
+					let topicURL;
 
-				if (topic_split.length == 2){
-					var topic_url = 'http://localhost:8080/stream?topic=' + topic_split[0] + '&type=ros_compressed';
-				} else {
-					topic_url = 'http://localhost:8080/stream?topic=' + topic_split[0]
+					if (topic_split.length == 2) {
+						topicURL = 'http://localhost:8080/stream?topic=' + topic_split[0] + '&type=ros_compressed';
+					} else {
+						topicURL = 'http://localhost:8080/stream?topic=' + topic_split[0];
+					}
+
+					// Set video URL
+					video.src = topicURL;
+					// Hide the dropdown
+					rostopic_dropdown_element.parentElement.style.display = "none";
+					// Start video resizing loop
+					animFrameHandle = requestAnimationFrame(initVideoSize);
 				}
-				console.log(topic_url);
-				document.getElementById('video').src = topic_url;
-
-			}
-
+			});
 		</script>
 	</body>
 </html>

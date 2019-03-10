@@ -30,22 +30,22 @@ function ros_subscriber(mainWindow){
       sub = rosNode.subscribe('/mruhGps', sensor_msgs.NavSatFix,
         (data) => { // define callback execution
           mainWindow.webContents.send('mruhGps', data);
-          console.log("MRUHGPS");
-          console.log(data);
+          // console.log("MRUHGPS");
+          // console.log(data);
       }
     );
       sub2 = rosNode.subscribe('/wamvGps', sensor_msgs.NavSatFix,
         (data) => { // define callback execution
-          console.log("WAMVGPS");
-          console.log(data);
+          // console.log("WAMVGPS");
+          // console.log(data);
           mainWindow.webContents.send('wamvGps', data);
       }
     );
       sub3 = rosNode.subscribe('/fix', sensor_msgs.NavSatFix,
         (data) => { // define callback execution
           mainWindow.webContents.send('fix', data);
-          console.log("FIXGPS");
-          console.log(data);
+          // console.log("FIXGPS");
+          // console.log(data);
       }
     );
 

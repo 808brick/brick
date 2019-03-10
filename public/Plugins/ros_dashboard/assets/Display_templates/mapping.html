@@ -41,16 +41,26 @@
   <select class="ui dropdown" id="gps_topic_dropdown1">
     <option>Select a GPS topic ...</option>
   </select>
+  <ul id="topic list 2">
+  </ul>
+  </div>
+  <div>
   <br><br>
   <img style="float:left; height:24px; padding-right: 10px;" src="../images/wamv_drawing.png" />
   <select class="ui dropdown" id="gps_topic_dropdown2">
     <option>Select a GPS topic ...</option>
   </select>
+  <ul id="topic list 2">
+  </ul>
+  </div>
+  <div>
   <br><br>
   <img style="float:left; height:24px; padding-right: 10px;" src="../images/pc.png" />
   <select class="ui dropdown" id="gps_topic_dropdown3">
     <option>Select a GPS topic ...</option>
   </select>
+  <ul id="topic list 3">
+  </ul>
   </div>
 
   <!-- <img src="../images/wamv_drawing2.png" />
@@ -64,10 +74,8 @@
   <ul id="topic list 1">
   </ul>
 
-  <ul id="topic list 2">
-  </ul>
-  <ul id="topic list 3">
-  </ul>
+
+
 
 <script>
 
@@ -200,7 +208,7 @@
      const text4 = document.createTextNode('Longitude: ' + received_info.longitude);
      // console.log(received_info);
      // console.log(received_info.latitude);
-     todo_list.innerHTML = '';
+     todo_list2.innerHTML = '';
      li3.appendChild(text3);
      li4.appendChild(text4);
 
@@ -227,7 +235,7 @@
      const text6 = document.createTextNode('Longitude: ' + received_info.longitude);
      // console.log(received_info);
      // console.log(received_info.latitude);
-     todo_list.innerHTML = '';
+     todo_list3.innerHTML = '';
      li5.appendChild(text5);
      li6.appendChild(text6);
 

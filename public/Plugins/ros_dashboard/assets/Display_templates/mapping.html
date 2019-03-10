@@ -58,7 +58,15 @@
     <option>Select a GPS topic ...</option>
   </select> -->
 
-  <ul>
+  <!-- <ul>
+  </ul> -->
+
+  <ul id="topic list 1">
+  </ul>
+
+  <ul id="topic list 2">
+  </ul>
+  <ul id="topic list 3">
   </ul>
 
 <script>
@@ -105,6 +113,24 @@
 
 	var marker = L.marker([21.3114616667, -157.889675], {icon: greenIcon}).addTo(mymap);
 
+  var greyIcon = L.icon({
+    iconUrl: '../images/wamv_drawing.png',
+
+    iconSize:     [32, 45], // size of the icon
+    iconAnchor:   [16, 16], // point of the icon which will correspond to marker's location
+  });
+
+  var marker2 = L.marker([21.31, -157.88898], {icon: greyIcon}).addTo(mymap);
+
+  var computerIcon = L.icon({
+    iconUrl: '../images/pc.png',
+
+    iconSize:     [24, 24], // size of the icon
+    iconAnchor:   [16, 16], // point of the icon which will correspond to marker's location
+  });
+
+  var marker3 = L.marker([21.3116, -157.889], {icon: computerIcon}).addTo(mymap);
+
 // 	var circle = L.circle([51.508, -0.11], {
 //     color: 'red',
 //     fillColor: '#f03',
@@ -121,7 +147,10 @@
 	const electron = require('electron');
 	const { ipcRenderer } = electron;
 	const topic_div = document.getElementById('html-topic-div');
-	const todo_list = document.querySelector('ul');
+	// const todo_list = document.querySelector('ul');
+  todo_list = document.getElementById('topic list 1');
+  todo_list2 = document.getElementById('topic list 2');
+  todo_list3 = document.getElementById('topic list 3');
 	// //Init IPC connection
 	ipcRenderer.send('ipc_init', 'IPC Started');
 	document.getElementById("Refresh IPC").onclick = function(){
@@ -131,29 +160,87 @@
 	// document.getElementById('Refresh IPC').click();
 
 	ipcRenderer.on('wamvGps', (event, received_info) => {
-		console.log("Wamv gPS event recieved");
+		console.log("Wamv gPS event recieved: wamvGps");
 		// const p = document.createElement('p');
 		// const text = document.createTextNode(received_info);
-		const li = document.createElement('p');
-		const li2 = document.createElement('p');
-  	const text = document.createTextNode('Lattitude: '+received_info.latitude);
-  	const text2 = document.createTextNode('Longitude: ' + received_info.longitude);
-  	// console.log(received_info);
-  	// console.log(received_info.latitude);
-  	todo_list.innerHTML = '';
-  	li.appendChild(text);
-  	li2.appendChild(text2);
 
-  	todo_list.appendChild(li);
-  	todo_list.appendChild(li2);
+    if (received_info != 'undefined'){
+
+  		const li = document.createElement('p');
+  		const li2 = document.createElement('p');
+    	const text = document.createTextNode('Lattitude: '+received_info.latitude);
+    	const text2 = document.createTextNode('Longitude: ' + received_info.longitude);
+    	// console.log(received_info);
+    	// console.log(received_info.latitude);
+    	todo_list.innerHTML = '';
+    	li.appendChild(text);
+    	li2.appendChild(text2);
+
+    	todo_list.appendChild(li);
+    	todo_list.appendChild(li2);
 
 
-  	mymap.removeLayer(marker);
-  	// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-  	marker = L.marker([received_info.latitude, received_info.longitude], {icon: greenIcon}).addTo(mymap);
-  	// i += 0.5
-  	// console.log(i);
+    	mymap.removeLayer(marker);
+    	// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+    	marker = L.marker([received_info.latitude, received_info.longitude], {icon: greenIcon}).addTo(mymap);
+    	// i += 0.5
+    	// console.log(i);
+    }
 
+ });
+
+ ipcRenderer.on('mruhGps', (event, received_info) => {
+   console.log("Wamv gPS event recieved: mruhGps");
+   // const p = document.createElement('p');
+   // const text = document.createTextNode(received_info);
+   if (received_info != 'undefined'){
+     const li3 = document.createElement('p');
+     const li4 = document.createElement('p');
+     const text3 = document.createTextNode('Lattitude: '+received_info.latitude);
+     const text4 = document.createTextNode('Longitude: ' + received_info.longitude);
+     // console.log(received_info);
+     // console.log(received_info.latitude);
+     todo_list.innerHTML = '';
+     li3.appendChild(text3);
+     li4.appendChild(text4);
+
+     todo_list2.appendChild(li3);
+     todo_list2.appendChild(li4);
+
+
+     mymap.removeLayer(marker2);
+     // marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+     marker2 = L.marker([received_info.latitude, received_info.longitude], {icon: greyIcon}).addTo(mymap);
+     // i += 0.5
+     // console.log(i);
+   }
+ });
+
+ ipcRenderer.on('fix', (event, received_info) => {
+   console.log("Wamv gPS event recieved: fix");
+   // const p = document.createElement('p');
+   // const text = document.createTextNode(received_info);
+   if (received_info != 'undefined'){
+     const li5 = document.createElement('p');
+     const li6 = document.createElement('p');
+     const text5 = document.createTextNode('Lattitude: '+received_info.latitude);
+     const text6 = document.createTextNode('Longitude: ' + received_info.longitude);
+     // console.log(received_info);
+     // console.log(received_info.latitude);
+     todo_list.innerHTML = '';
+     li5.appendChild(text5);
+     li6.appendChild(text6);
+
+     todo_list3.appendChild(li5);
+     todo_list3.appendChild(li6);
+
+
+     mymap.removeLayer(marker3);
+     // marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+     marker3 = L.marker([received_info.latitude, received_info.longitude], {icon: computerIcon}).addTo(mymap);
+     // i += 0.5
+     // console.log(i);
+  }
  });
 
 

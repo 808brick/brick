@@ -17,16 +17,38 @@ let mainWindow;
 function ros_subscriber(mainWindow){
   console.log(`file://${__dirname}/index.html`);
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-  rosnodejs.initNode('/listener_node')
+  rosnodejs.initNode('/listener_node2')
     .then((rosNode) => {
       // Create ROS subscriber on the 'chatter' topic expecting String messages
-      sub = rosNode.subscribe('/chatter', std_msgs.String,
+      // sub = rosNode.subscribe('/chatter', std_msgs.String,
+      //   (data) => { // define callback execution
+      //   mainWindow.webContents.send('test_ros_topic', data.data);
+      //     // console.log(data.data);
+      //     // console.log(typeof data.data);
+      //   }
+      // );
+      sub = rosNode.subscribe('/mruhGps', sensor_msgs.NavSatFix,
         (data) => { // define callback execution
-        mainWindow.webContents.send('test_ros_topic', data.data);
-          // console.log(data.data);
-          // console.log(typeof data.data);
-        }
-      );
+          mainWindow.webContents.send('mruhGps', data);
+          console.log("MRUHGPS");
+          console.log(data);
+      }
+    );
+      sub2 = rosNode.subscribe('/wamvGps', sensor_msgs.NavSatFix,
+        (data) => { // define callback execution
+          console.log("WAMVGPS");
+          console.log(data);
+          mainWindow.webContents.send('wamvGps', data);
+      }
+    );
+      sub3 = rosNode.subscribe('/fix', sensor_msgs.NavSatFix,
+        (data) => { // define callback execution
+          mainWindow.webContents.send('fix', data);
+          console.log("FIXGPS");
+          console.log(data);
+      }
+    );
+
     });
 }
 

@@ -17,6 +17,11 @@
 		"repo": null,
 		"plugin_folder": "ros_tools"
 	},
+	"roslibjs": {
+		"name": "roslibjs test",
+		"repo": null,
+		"plugin_folder": "roslibjs"
+	},
 	"test_ros_subscriber": {
 		"name": "Test ROS Subscriber"
 	}

@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^4.0.4",
+    "leaflet-rotatedmarker": "^0.2.0",
     "path": "^0.12.7",
     "rosnodejs": "^3.0.0",
     "semantic-ui": "^2.4.2"

@@ -103,6 +103,8 @@ However, using Semantic UI, making a blue Save button is way easier:
 ```
 ![Picture of blue Semantic save button](public/images/semanticSaveBlue.PNG)
 
+I cannot stress this enough. GO. TO. THE. WEBSITE. The sidebar menu will give you everything you need to know on how to make tables, forms, cards, etc.
+
 #### CSS Overrides
 If additional CSS editing is necessary to create the components you want, it might be necessary to create an ```.override``` file. This avoids the problem of constantly having to use ```!important``` to ignore certain CSS formats in Semantic UI.
 

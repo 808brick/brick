@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8" />
 
-<script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
-<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<!-- <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script> -->
+
+<script type="text/javascript" src="../../JS/eventemitter2.min.js"></script>
+<script type="text/javascript" src="../../JS/roslib.min.js"></script>
 
 <body>
 
@@ -14,8 +17,13 @@
   <div id="test_div2"></div>
 
   <select class="ui dropdown" id="topic_dropdown1">
-    <option>Select a GPS topic ...</option>
+    <option>Click the "Refresh ROS topics" button ...</option>
   </select>
+  <button id="add_new_subscriber_button">Create New Subscriber</button>
+  <button id="refresh_ros_topics_button">Refresh ROS topics</button>
+  <br/><br/>
+  <button id="unsubscribe_button">Unsubscribe Selected</button>
+  <button id="unsubscribe_all_button">Unsubscribe All</button>
 
 </body>
 
@@ -143,10 +151,23 @@
     // console.log(ros_topics_global);
   }
 
+  document.getElementById("refresh_ros_topics_button").onclick = function() {
+      ros_topic_populate_dropdown("topic_dropdown1")
+    }
 
-  ros_topic_populate_dropdown("topic_dropdown1");
+  document.getElementById("add_new_subscriber_button").onclick = function() {
+    var dropdown_option = document.getElementById("topic_dropdown1")
+    var value = dropdown_option.options[dropdown_option.selectedIndex].value
+    create_new_subscriber(value, function(message){
+      console.log("This is a message: " + message.data);
+      const test_div = document.getElementById('test_div');
+      test_div.innerHTML = message.data;})
+  }
 
-  create_new_subscriber("/chatter", function(message){console.log("This is a message: " + message.data);})
+
+  // ros_topic_populate_dropdown("topic_dropdown1");
+
+  // create_new_subscriber("/chatter", function(message){console.log("This is a message: " + message.data);})
 
 // populate_dropdown("topic_dropdown1", ["cat", "dog", "cow"]);
 

@@ -1,9 +1,18 @@
 <html>
 	<head>
+
+		<script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+		<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
 		<link rel="stylesheet" href="../../../../CSS/semantic/src/semantic.min.css">
 		<script src="../../../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
 		<!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 		<script src="../../../../JS/require.js"></script>
+		<!-- <script type="text/javascript" src="../../../../JS/eventemitter2.min.js"></script>
+		<script type="text/javascript" src="../../../../JS/roslib.min.js"></script> -->
+
+		<!-- <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+		<script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script> -->
 
 		<script>
 			// Fix jQuery not being defined
@@ -50,6 +59,7 @@
 			<option selected>-- Select Topic --</option>
 		</select>
 		<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px" onclick="deleteRow()">Delete Topic</button>
+			<button id="refresh_topics_button" class="ui teal button" style="margin: 10px 0px 10px 10px;">Refresh Topics</button>
 
 		<script>
 			// Use the correct require function
@@ -103,6 +113,77 @@
 					rostopic_dropdown_element.appendChild(el);
 				}
 			});
+
+			// ROSSSSSSSSS dress for less
+
+			// Connecting to ROS
+			// -----------------
+
+			let ros_topics_global = {};
+
+			var ros = new ROSLIB.Ros({
+				url : 'ws://localhost:9090'
+			});
+
+			ros.on('connection', function() {
+				console.log('Connected to websocket server.');
+			});
+
+			ros.on('error', function(error) {
+				console.log('Error connecting to websocket server: ', error);
+			});
+
+			ros.on('close', function() {
+				console.log('Connection to websocket server closed.');
+			});
+
+			function populate_dropdown(dropdown_id, array_data){
+				dropdown = document.getElementById(dropdown_id);
+				dropdown.length = 0;
+				for (var i = 0; i < array_data.length; i++) {
+					var topic_name = array_data[i];
+					var el = document.createElement("option");
+					el.textContent = topic_name;
+					el.value = topic_name;
+					dropdown.appendChild(el);
+				}
+			}
+
+			function ros_topic_populate_dropdown(dropdown_id){
+				ros.getTopics(function(params) {
+						// console.log(params)
+						 populate_dropdown(dropdown_id, params["topics"]);
+						 update_ros_topics_global(params["topics"], params["types"]);
+					 });
+			};
+
+			function create_new_subscriber(topic_name, callback){
+				var listener = new ROSLIB.Topic({
+					ros : ros,
+					name : topic_name,
+					// messageType : 'std_msgs/String'
+					messageType : ros_topics_global[topic_name]
+				});
+
+				// listener.subscribe(function(message){ callback(message) });
+				listener.subscribe(function(message) {
+					// console.log(message)
+					callback(message)
+				});
+			}
+
+			function update_ros_topics_global(topics_array, types_array){
+				ros_topics_global = {};
+				for (var i = 0; i < topics_array.length; i++) {
+					ros_topics_global[topics_array[i]] = types_array[i];
+				}
+				// console.log(ros_topics_global);
+			}
+
+			document.getElementById("refresh_topics_button").onclick = function() {
+					ros_topic_populate_dropdown("add_topic_dropdown")
+					console.log("You pressed the button");
+				}
 
 		</script>
 	</body>

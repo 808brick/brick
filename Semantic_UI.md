@@ -83,25 +83,25 @@ Say you want to make a 'Save' button. The typical way to make a button in HTML l
 ```HTML
 <button type="button">Save</button>
 ```
-![Picture of HTML save button](public/images/htmlSave.png)
+![Picture of HTML save button](public/images/htmlSave.PNG)
 
 ...But that looks ugly! This is how to make a button using Semantic UI:
 ```HTML
 <button class="ui button">Save</button>
 ```
-![Picture of Semantic save button](public/images/semanticSave.png)
+![Picture of Semantic save button](public/images/semanticSave.PNG)
 
 What if you wanted to make that Save button blue? The fastest way to do it would be to make a CSS class for buttons, or make an in-line style in HTML that looks something like:
 ```HTML
 <button class="ui button" style="background-color: #008CBA;">Save</button>
 ```
-![Picture of blue HTML save button](public/images/htmlSaveBlue.png)
+![Picture of blue HTML save button](public/images/htmlSaveBlue.PNG)
 
 However, using Semantic UI, making a blue Save button is way easier:
 ```HTML
 <button class="ui blue button">Save</button>
 ```
-![Picture of blue Semantic save button](public/images/semanticSaveBlue.png)
+![Picture of blue Semantic save button](public/images/semanticSaveBlue.PNG)
 
 #### CSS Overrides
 If additional CSS editing is necessary to create the components you want, it might be necessary to create an ```.override``` file. This avoids the problem of constantly having to use ```!important``` to ignore certain CSS formats in Semantic UI.

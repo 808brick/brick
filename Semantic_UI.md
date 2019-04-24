@@ -46,9 +46,10 @@ You will then begin your installation of Semantic UI. Once that's done, run the 
 cd semantic
 gulp build
 ```
+Now you're ready to begin using Semantic UI!
 
 #### Include in Your HTML
-Running the gulp build tools will compile CSS and Javascript for use in your project. Just link to these files in your HTML along with the latest jQuery.
+Running the gulp build tools will compile CSS and Javascript for use in your project. Just link to these files in your HTML head tag along with the latest jQuery (this means literally copy and paste the following code into the head of your HTML file).
 ```html
 <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
 <script
@@ -57,6 +58,9 @@ Running the gulp build tools will compile CSS and Javascript for use in your pro
   crossorigin="anonymous"></script>
 <script src="semantic/dist/semantic.min.js"></script>
 ```
+Now you're ready to begin coding with Semantic! Skip down to "How to use Semantic UI" to see examples of how you can use Semantic UI in your following code.
+
+If Semantic UI doesn't work, try check where semantic.min.css, jquery-3.1.1.min.js, and semantic.min.js are located within your project, and change the directory address accordingly.
 
 #### Updating with NPM
 Semantic's NPM install script will automatically update Semantic UI to the latest version while preserving your site and packaged themes.

@@ -54,7 +54,7 @@
 		</table>
 
 
-		<button class="ui teal left attached button onclick=" addRow() style="margin: 10px 0px 10px 10px;">Add Topic</button>
+		<button class="ui teal left attached button" onclick="addRow()" style="margin: 10px 0px 10px 10px;">Add Topic</button>
 		<select id="add_topic_dropdown" style="margin: 10px, 0px 10px 0px; float: right;">
 			<option selected>-- Select Topic --</option>
 		</select>
@@ -67,15 +67,20 @@
 			// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
 			$('select').dropdown();
 
-			let rowCount = 3;
+			let rowCount = 4;
 			// Add rows to the table
 			function addRow() {
-				let table = document.getElementById("myTable");
-				let row = table.insertRow(4);
-				let cell1 = row.insertCell(0);
-				let cell2 = row.insertCell(1);
+				var table = document.getElementById("myTable");
+				var row = table.insertRow(rowCount);
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
 				rowCount++;
-				// cell1.innerHTML = "DROPDOWN HERE";
+				var dropdown_option = document.getElementById("add_topic_dropdown")
+				var value = dropdown_option.options[dropdown_option.selectedIndex].value
+				cell1.innerHTML = value;
+				create_new_subscriber(value, function(message) {
+					cell2.innerHTML = message.data;
+				});
 				// cell2.innerHTML = "NEW CELL2";
 			}
 			// Delete rows from the table

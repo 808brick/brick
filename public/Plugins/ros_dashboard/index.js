@@ -217,27 +217,27 @@ function roslaunch_list(callback){
 
     ipcMain.on('map_server_start', (event, text) => {
       console.log("Starting Map Server: ")
-      exec("sudo service docker start", (err, stdout, stderr) => {
+      // exec("sudo service docker start", (err, stdout, stderr) => {
       // console.log(err);
       // console.log(stdout);
       // console.log(stderr);
       // console.log("ERR: ");
       // console.log(err);
-      if (err == null){
+      // if (err == null){
         exec("cd public/Plugins/ros_dashboard/assets && sudo docker run --rm -v $(pwd):/data -p 8082:80 klokantech/openmaptiles-server", (err, stdout, stderr) => {
         // exec("sudo docker  run  --rm -v  $(pwd):/data  -p  8081:80  klokantech/tileserver-gl .public/Plugins/image_testing/oahu.mbtiles ", (err, stdout, stderr) => {
-          // console.log("Socket Command Run")
-          // console.log(err);
-          // console.log("STDOUT")
-          // console.log(stdout);
-          // console.log("STDERR")
-          // console.log(stderr);
+          console.log("Socket Command Run")
+          console.log(err);
+          console.log("STDOUT")
+          console.log(stdout);
+          console.log("STDERR")
+          console.log(stderr);
           if (stderr != null){
             console.log("This port is already used. Map Tile server may already be running, or another application is using the same port")
           }
         })
-      }
-    })
+      // }
+    // })
 
     });
     ipcMain.on('map_server_stop', (event, text) => {

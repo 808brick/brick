@@ -83,6 +83,8 @@ Say you want to make a 'Save' button. The typical way to make a button in HTML l
 ```HTML
 <button type="button">Save</button>
 ```
+<img class="ui massive rounded image" src="../images/htmlSave.png">
+
 ...But that looks ugly! This is how to make a button using Semantic UI:
 ```HTML
 <button class="ui button">Save</button>

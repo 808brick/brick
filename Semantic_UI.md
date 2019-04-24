@@ -46,9 +46,10 @@ You will then begin your installation of Semantic UI. Once that's done, run the 
 cd semantic
 gulp build
 ```
+Now you're ready to begin using Semantic UI!
 
 #### Include in Your HTML
-Running the gulp build tools will compile CSS and Javascript for use in your project. Just link to these files in your HTML along with the latest jQuery.
+Running the gulp build tools will compile CSS and Javascript for use in your project. Just link to these files in your HTML head tag along with the latest jQuery (this means literally copy and paste the following code into the head of your HTML file).
 ```html
 <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
 <script
@@ -57,6 +58,9 @@ Running the gulp build tools will compile CSS and Javascript for use in your pro
   crossorigin="anonymous"></script>
 <script src="semantic/dist/semantic.min.js"></script>
 ```
+Now you're ready to begin coding with Semantic! Skip down to "How to use Semantic UI" to see examples of how you can use Semantic UI in your following code.
+
+If Semantic UI doesn't work, try check where semantic.min.css, jquery-3.1.1.min.js, and semantic.min.js are located within your project, and change the directory address accordingly.
 
 #### Updating with NPM
 Semantic's NPM install script will automatically update Semantic UI to the latest version while preserving your site and packaged themes.
@@ -83,18 +87,27 @@ Say you want to make a 'Save' button. The typical way to make a button in HTML l
 ```HTML
 <button type="button">Save</button>
 ```
+![Picture of HTML save button](public/images/htmlSave.PNG)
+
 ...But that looks ugly! This is how to make a button using Semantic UI:
 ```HTML
 <button class="ui button">Save</button>
 ```
+![Picture of Semantic save button](public/images/semanticSave.PNG)
+
 What if you wanted to make that Save button blue? The fastest way to do it would be to make a CSS class for buttons, or make an in-line style in HTML that looks something like:
 ```HTML
 <button class="ui button" style="background-color: #008CBA;">Save</button>
 ```
+![Picture of blue HTML save button](public/images/htmlSaveBlue.PNG)
+
 However, using Semantic UI, making a blue Save button is way easier:
 ```HTML
 <button class="ui blue button">Save</button>
 ```
+![Picture of blue Semantic save button](public/images/semanticSaveBlue.PNG)
+
+I cannot stress this enough. GO. TO. THE. WEBSITE. The sidebar menu will give you everything you need to know on how to make tables, forms, cards, etc.
 
 #### CSS Overrides
 If additional CSS editing is necessary to create the components you want, it might be necessary to create an ```.override``` file. This avoids the problem of constantly having to use ```!important``` to ignore certain CSS formats in Semantic UI.

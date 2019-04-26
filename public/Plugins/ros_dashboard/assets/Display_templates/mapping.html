@@ -40,6 +40,7 @@
 	<button class="ui button" id="start map server">Start Map Server</button>
 	<button class="ui button" id="stop map server">Stop Map Server</button>
 	<button class="ui button" id="refresh map">Refresh Map</button>
+	<button class="ui button" id="refresh topics">Refresh Topics</button>
 
 	<div>
 		<img style="float:left; height:24px; padding-right: 10px;" src="../images/wamv_drawing4.png" />
@@ -170,185 +171,31 @@
 			rotationOrigin: "center"
 		}).addTo(mymap);
 
-		// 	var circle = L.circle([51.508, -0.11], {
-		//     color: 'red',
-		//     fillColor: '#f03',
-		//     fillOpacity: 0.5,
-		//     radius: 500
-		// }).addTo(mymap);
+		const electron = require('electron');
+		const {
+			ipcRenderer
+		} = electron;
 
-		// 	var polygon = L.polygon([
-		//     [51.509, -0.08],
-		//     [51.503, -0.06],
-		//     [51.51, -0.047]
-		// ]).addTo(mymap);
+		document.getElementById("start map server").onclick = function() {
+			document.getElementById("map_message_div").innerHTML = "Enter Your Password in the terminal you started the app in (if prompted)";
+			ipcRenderer.send('map_server_start', 'start map server');
+			console.log("map server start requested");
+		};
+		document.getElementById("stop map server").onclick = function() {
+			ipcRenderer.send('map_server_stop', 'stop map server');
+			console.log("map server stop requested");
+		};
 
-		// const electron = require('electron');
-		// const {
-		// 	ipcRenderer
-		// } = electron;
-		// const topic_div = document.getElementById('html-topic-div');
-		// // const todo_list = document.querySelector('ul');
-		// todo_list = document.getElementById('topic list 1');
-		// todo_list2 = document.getElementById('topic list 2');
-		// todo_list3 = document.getElementById('topic list 3');
-		// // //Init IPC connection
-		// ipcRenderer.send('ipc_init', 'IPC Started');
-		// document.getElementById("Refresh IPC").onclick = function() {
-		// 	ipcRenderer.send('ipc_init', 'IPC Refreshed');
-		// 	console.log("IPC Refreshed");
-		// };
-		// // document.getElementById('Refresh IPC').click();
-		//
-		// ipcRenderer.on('wamvGps', (event, received_info) => {
-		// 	console.log("Wamv gPS event recieved: wamvGps");
-		// 	// const p = document.createElement('p');
-		// 	// const text = document.createTextNode(received_info);
-		//
-		// 	if (received_info != 'undefined') {
-		//
-		// 		const li = document.createElement('p');
-		// 		const li2 = document.createElement('p');
-		// 		const text = document.createTextNode('Lattitude: ' + received_info.latitude);
-		// 		const text2 = document.createTextNode('Longitude: ' + received_info.longitude);
-		// 		// console.log(received_info);
-		// 		// console.log(received_info.latitude);
-		// 		todo_list.innerHTML = '';
-		// 		li.appendChild(text);
-		// 		li2.appendChild(text2);
-		//
-		// 		todo_list.appendChild(li);
-		// 		todo_list.appendChild(li2);
-		//
-		//
-		// 		mymap.removeLayer(marker);
-		// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-		// 		marker = L.marker([received_info.latitude, received_info.longitude], {
-		// 			icon: greenIcon
-		// 		}).addTo(mymap);
-		// 		// i += 0.5
-		// 		// console.log(i);
-		// 	}
-		//
-		// });
-		//
-		// ipcRenderer.on('mruhGps', (event, received_info) => {
-		// 	console.log("Wamv gPS event recieved: mruhGps");
-		// 	// const p = document.createElement('p');
-		// 	// const text = document.createTextNode(received_info);
-		// 	if (received_info != 'undefined') {
-		// 		const li3 = document.createElement('p');
-		// 		const li4 = document.createElement('p');
-		// 		const text3 = document.createTextNode('Lattitude: ' + received_info.latitude);
-		// 		const text4 = document.createTextNode('Longitude: ' + received_info.longitude);
-		// 		// console.log(received_info);
-		// 		// console.log(received_info.latitude);
-		// 		todo_list2.innerHTML = '';
-		// 		li3.appendChild(text3);
-		// 		li4.appendChild(text4);
-		//
-		// 		todo_list2.appendChild(li3);
-		// 		todo_list2.appendChild(li4);
-		//
-		//
-		// 		mymap.removeLayer(marker2);
-		// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-		// 		marker2 = L.marker([received_info.latitude, received_info.longitude], {
-		// 			icon: greyIcon
-		// 		}).addTo(mymap);
-		// 		// i += 0.5
-		// 		// console.log(i);
-		// 	}
-		// });
-		//
-		// ipcRenderer.on('fix', (event, received_info) => {
-		// 	console.log("Wamv gPS event recieved: fix");
-		// 	// const p = document.createElement('p');
-		// 	// const text = document.createTextNode(received_info);
-		// 	if (received_info != 'undefined') {
-		// 		const li5 = document.createElement('p');
-		// 		const li6 = document.createElement('p');
-		// 		const text5 = document.createTextNode('Lattitude: ' + received_info.latitude);
-		// 		const text6 = document.createTextNode('Longitude: ' + received_info.longitude);
-		// 		// console.log(received_info);
-		// 		// console.log(received_info.latitude);
-		// 		todo_list3.innerHTML = '';
-		// 		li5.appendChild(text5);
-		// 		li6.appendChild(text6);
-		//
-		// 		todo_list3.appendChild(li5);
-		// 		todo_list3.appendChild(li6);
-		//
-		//
-		// 		mymap.removeLayer(marker3);
-		// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-		// 		marker3 = L.marker([received_info.latitude, received_info.longitude], {
-		// 			icon: computerIcon
-		// 		}).addTo(mymap);
-		// 		// i += 0.5
-		// 		// console.log(i);
-		// 	}
-		// });
-		//
-		//
-		// document.getElementById("start map server").onclick = function() {
-		// 	document.getElementById("map_message_div").innerHTML = "Enter Your Password in the terminal you started the app in (if prompted)";
-		// 	ipcRenderer.send('map_server_start', 'start map server');
-		// 	console.log("map server start requested");
-		// };
-		// document.getElementById("stop map server").onclick = function() {
-		// 	ipcRenderer.send('map_server_stop', 'stop map server');
-		// 	console.log("map server stop requested");
-		// };
-		//
-		// document.getElementById("refresh map").onclick = function() {
-		// 	// ipcRenderer.send("refresh_map", 'refresh map');
-		// 	console.log('refreshing map div');
-		//
-		// 	L.tileLayer('http://localhost:8082/styles/klokantech-basic/{z}/{x}/{y}.png', {
-		// 		maxZoom: 18,
-		// 		id: 'mapbox.streets'
-		// 	}).addTo(mymap);
-		// };
-		//
-		// document.getElementById("rotate degrees").oninput = function() {
-		// 	let angle = document.getElementById("rotate degrees").value;
-		// 	console.log(`Rotating to ${angle} degrees`);
-		// 	marker.setRotationAngle(angle);
-		// }
-		//
-		// ipcRenderer.send('gps_topics', 'Get Gps Topics');
-		//
-		// ipcRenderer.on('gps_topics', (event, received_info) => {
-		// 	console.log("Recieved GPS Topics")
-		// 	rostopic_dropdown_element = document.getElementById('gps_topic_dropdown1');
-		// 	rostopic_dropdown_element.options.length = 0
-		// 	for (var i = 0; i < received_info.length; i++) {
-		// 		var topic_name = received_info[i];
-		// 		var el = document.createElement("option");
-		// 		el.textContent = topic_name;
-		// 		el.value = topic_name;
-		// 		rostopic_dropdown_element.appendChild(el);
-		// 	}
-		// 	rostopic_dropdown_element = document.getElementById('gps_topic_dropdown2');
-		// 	rostopic_dropdown_element.options.length = 0
-		// 	for (var i = 0; i < received_info.length; i++) {
-		// 		var topic_name = received_info[i];
-		// 		var el = document.createElement("option");
-		// 		el.textContent = topic_name;
-		// 		el.value = topic_name;
-		// 		rostopic_dropdown_element.appendChild(el);
-		// 	}
-		// 	rostopic_dropdown_element = document.getElementById('gps_topic_dropdown3');
-		// 	rostopic_dropdown_element.options.length = 0
-		// 	for (var i = 0; i < received_info.length; i++) {
-		// 		var topic_name = received_info[i];
-		// 		var el = document.createElement("option");
-		// 		el.textContent = topic_name;
-		// 		el.value = topic_name;
-		// 		rostopic_dropdown_element.appendChild(el);
-		// 	}
-		// })
+		document.getElementById("refresh map").onclick = function() {
+			// ipcRenderer.send("refresh_map", 'refresh map');
+			console.log('refreshing map div');
+
+			L.tileLayer('http://localhost:8082/styles/klokantech-basic/{z}/{x}/{y}.png', {
+				maxZoom: 18,
+				id: 'mapbox.streets'
+			}).addTo(mymap);
+		};
+
 
 
 		// ROSSSSSSSSS dress for less
@@ -426,6 +273,7 @@
 		// 	}
 
 			function ros_specific_topic_type_populate_dropdown(topic_type, dropdown_id){
+				// console.log("specific topic type dropdown")
 				ros.getTopicsForType(topic_type, function(params) {
 						// console.log(params)
 						 populate_dropdown(dropdown_id, params);
@@ -434,12 +282,14 @@
 			};
 
 			// ros_topic_populate_dropdown("imu_topic_dropdown1");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown1");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown2");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown3");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown1");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown2");
-			ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown3");
+			function refresh_topic_dropdowns(){
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown1");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown2");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown3");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown1");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown2");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown3");
+			}
 
 			document.getElementById("start1_button").onclick = function(){
 					var dropdown_option_gps = document.getElementById("gps_topic_dropdown1")
@@ -447,11 +297,13 @@
 					var dropdown_option_imu = document.getElementById("imu_topic_dropdown1")
 					var imu_value = dropdown_option_imu.options[dropdown_option_imu.selectedIndex].value
 					create_new_subscriber(gps_value, function(message){
-								mymap.removeLayer(marker);
-						// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-								marker = L.marker([message.latitude, message.longitude], {
-									icon: greenIcon
-								}).addTo(mymap);
+						var newLatLng = new L.LatLng(message.latitude, message.longitude);
+						marker.setLatLng(newLatLng);
+						// 		mymap.removeLayer(marker);
+						// // 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+						// 		marker = L.marker([message.latitude, message.longitude], {
+						// 			icon: greenIcon
+						// 		}).addTo(mymap);
 					});
 
 					if (imu_value != "Select a IMU topic ..."){
@@ -471,11 +323,13 @@
 					var dropdown_option_imu2 = document.getElementById("imu_topic_dropdown2")
 					var imu_value2 = dropdown_option_imu2.options[dropdown_option_imu2.selectedIndex].value
 					create_new_subscriber(gps_value2, function(message){
-								mymap.removeLayer(marker2);
-						// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-								marker2 = L.marker([message.latitude, message.longitude], {
-									icon: greyIcon
-								}).addTo(mymap);
+						var newLatLng = new L.LatLng(message.latitude, message.longitude);
+						marker2.setLatLng(newLatLng);
+						// 		mymap.removeLayer(marker2);
+						// // 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+						// 		marker2 = L.marker([message.latitude, message.longitude], {
+						// 			icon: greyIcon
+						// 		}).addTo(mymap);
 					});
 
 					if (imu_value2 != "Select a IMU topic ..."){
@@ -498,11 +352,13 @@
 					var dropdown_option_imu3 = document.getElementById("imu_topic_dropdown3")
 					var imu_value3 = dropdown_option_imu3.options[dropdown_option_imu3.selectedIndex].value
 					create_new_subscriber(gps_value3, function(message){
-								mymap.removeLayer(marker3);
+								// mymap.removeLayer(marker3);
+								var newLatLng = new L.LatLng(message.latitude, message.longitude);
+    						marker3.setLatLng(newLatLng);
 						// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
-								marker3 = L.marker([message.latitude, message.longitude], {
-									icon: computerIcon
-								}).addTo(mymap);
+								// marker3 = L.marker([message.latitude, message.longitude], {
+								// 	icon: computerIcon
+								// }).addTo(mymap);
 					});
 
 					if (imu_value3 != "Select a IMU topic ..."){
@@ -516,6 +372,13 @@
 						})
 					}
 
+			}
+
+			refresh_topic_dropdowns()
+
+			document.getElementById("refresh topics").onclick = function() {
+				// console.log("Button Pressed")
+				refresh_topic_dropdowns()
 			}
 
 

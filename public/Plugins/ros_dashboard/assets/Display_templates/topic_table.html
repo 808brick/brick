@@ -24,26 +24,26 @@
 	</head>
 
 	<body>
-		<table id="myTable" class="ui celled table">
+		<table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Topic</th>
 					<th>Value</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td data-label="Topic">Velocity</td>
+			<tbody id="topic-table">
+				<!-- <tr>
+ 					<td data-label="Topic">Velocity</td>
 					<td data-label="Value">nyoom mph</td>
 				</tr>
-				<tr>
+ 				<tr>
 					<td data-label="Topic">GPS</td>
 					<td data-label="Value">(345, 54, 8897)</td>
 				</tr>
 				<tr>
 					<td data-label="Topic">Direction</td>
 					<td data-label="Value">13 degrees</td>
-				</tr>
+				</tr> -->
 			</tbody>
 		</table>
 
@@ -52,11 +52,13 @@
 		<select id="add_topic_dropdown" style="margin: 10px, 0px 10px 0px; float: right;">
 			<option selected>-- Select Topic --</option>
 		</select>
-		<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px" onclick="deleteRow()">Delete Topic</button>
-			<button id="refresh_topics_button" class="ui labeled icon button" style="margin: 10px 0px 10px 10px;">
+
+		<button class="ui teal basic button" style="float: right; margin: 10px 10px 10px 0px;" onclick="deleteRow()">Delete Topic</button>
+			
+		<button id="refresh_topics_button" class="ui labeled icon button" style="margin: 10px 0px 10px 10px;">
 				<i class="sync alternate icon"></i>
 				Refresh Topics
-			</button>
+		</button>
 
 
 		<script>
@@ -65,10 +67,10 @@
 			// Initialize dropdown in JQuery DO NOT GET RID OF THIS OR I SWEAR TO GOD RAYMOND
 			$('select').dropdown();
 
-			let rowCount = 4;
+			let rowCount = 0;
 			// Add rows to the table
 			function addRow() {
-				var table = document.getElementById("myTable");
+				var table = document.getElementById("topic-table");
 				var row = table.insertRow(rowCount);
 				var cell1 = row.insertCell(0);
 				var cell2 = row.insertCell(1);
@@ -83,11 +85,10 @@
 			}
 			// Delete rows from the table
 			function deleteRow() {
-				if (rowCount == 0) {
-					document.getElementbyId("myTable").disabled = true;
+				if (rowCount > 0) {
+					document.getElementById("topic-table").deleteRow(rowCount - 1);
+					rowCount--;
 				}
-				document.getElementById("myTable").deleteRow(rowCount);
-				rowCount--;
 			}
 
 			const electron = require('electron');

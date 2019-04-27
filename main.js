@@ -36,6 +36,19 @@ app.on('ready', () => {
 
   check_for_new_plugins('./public/Plugins/', Menu);
 
+  mainWindow.on("closed", () => {
+    console.log('\x1b[36m%s\x1b[0m', "\nApp Closed, hit Ctrl + C if termianl does not return to normal\n");
+  //   console.log("App Closed")
+  //   exec("rosnode kill rosbridge_websocket && rosnode kill web_video_server", (err, stdout, stderr) => {
+  //     console.log(err)
+  //     console.log(stderr)
+  //     console.log(stdout)
+  //   app.quit()
+  // })
+
+
+  });
+
 });
 
 

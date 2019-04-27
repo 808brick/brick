@@ -6,9 +6,11 @@
   "scripts": {
     "start": "gnome-terminal -- roscore & rosrun web_video_server web_video_server & nodejs talker.js & rosbag play -l -q ./public/Plugins/test_ros_subscriber/test_bag.bag & electron .",
     "electron": "electron .",
-    "electron-rebuild": "electron-rebuild -w opencv4nodejs",
     "launch-test": "gnome-terminal -- roscore && gnome-terminal -- nodejs talker.js && gnome-terminal -- electron .",
     "launch-test-2": "gnome-terminal -- roscore & rosrun web_video_server web_video_server & nodejs talker.js & rosbag play -l -q ./public/Plugins/test_ros_subscriber/test_bag.bag & electron .",
+    "gui": "npm run electron & rosrun web_video_server web_video_server & roslaunch rosbridge_server rosbridge_websocket.launch",
+    "initialize": "npm install && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo apt-get install ros-melodic-rosbridge-suite  && sudo apt-get install ros-melodic-web-video-server && source /opt/ros/melodic/setup.bash  && sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' && sudo apt-get update && apt-cache policy docker-ce && sudo apt-get install -y docker-ce",
+    "initialize16": "npm install && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo apt-get install ros-kinetic-rosbridge-suite  && sudo apt-get install ros-kinetic-web-video-server && source /opt/ros/kinetic/setup.bash  && sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' && sudo apt-get update && apt-cache policy docker-ce && sudo apt-get install -y docker-ce",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

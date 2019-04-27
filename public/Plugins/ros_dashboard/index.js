@@ -17,7 +17,7 @@ let mainWindow;
 function ros_subscriber(mainWindow){
   console.log(`file://${__dirname}/index.html`);
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-  
+
 }
 
 function main(mainWindow, ipcMain){
@@ -246,13 +246,13 @@ function roslaunch_list(callback){
     });
     });
 
-    ipcMain.on('start_video_server', (event, text) => {
-      exec("rosrun web_video_server web_video_server", (err, stdout, stderr) => {
-      //   console.log(err)
-      console.log(stdout);
-      // console.log(stderr);
-    })
-    });
+    // ipcMain.on('start_video_server', (event, text) => {
+    //   exec("rosrun web_video_server web_video_server", (err, stdout, stderr) => {
+    //   //   console.log(err)
+    //   console.log(stdout);
+    //   // console.log(stderr);
+    // })
+    // });
 
 
 

@@ -142,6 +142,16 @@
 			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
 		});
 
+		var marker_default = L.marker([21.3114616687, -157.889695], {}).addTo(mymap)
+
+		mymap.on("click", onMapClick);
+
+		function onMapClick(e) {
+			marker_default
+					.setLatLng(e.latlng)
+					// .openOn(mymap);
+		}
+
 		var marker = L.marker([21.3114616667, -157.889675], {
 			icon: greenIcon,
 			rotationOrigin: "center"

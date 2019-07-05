@@ -22,6 +22,11 @@
 		"repo": null,
 		"plugin_folder": "roslibjs"
 	},
+	"ssh_ros": {
+		"name": "SSH ROS",
+		"repo": null,
+		"plugin_folder": "ssh_ros"
+	},
 	"test_ros_subscriber": {
 		"name": "Test ROS Subscriber"
 	}

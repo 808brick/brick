@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>SSH ROS</title>
+
+	<link rel="stylesheet" href="../../CSS/semantic/src/semantic.min.css">
+	<!-- <link rel="stylesheet" href="style.css"> -->
+	<link rel="javascript" href="dropdown_options.js">
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="../../CSS/semantic/src/jquery-3.3.1.min.js"></script>
+
+	<script>
+			// Fix jQuery not being defined
+			// See https://github.com/Semantic-Org/Semantic-UI/issues/5201#issuecomment-359112270
+			// https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron
+
+			try {
+				$ = jQuery = module.exports;
+				// If you want module.exports to be empty, uncomment:
+				// module.exports = {};
+			} catch (e) {}
+
+		</script>
+		<script src="../../CSS/semantic/src/semantic.min.js"></script>
+
+	<style>
+
+		.terminal_div{
+			margin-top: 10px;
+			background-color: #300A24;
+			color: white;
+			overflow: scroll;
+			height: 30vh;
+			/*width: 48vw;*/
+
+		}
+
+		@media(device-width: 768px) and (device-height: 1024px){
+		    ::-webkit-scrollbar {
+		        width: 7px;
+		        height: 8px;
+		        background-color: #aaa;
+		    }
+		    ::-webkit-scrollbar-thumb {
+	    	 	background: #000; 
+		        border-radius: 4px;
+		        background-color: rgba(0,0,0,.5);
+		        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+		    }
+		}
+	</style>
+
+	
+</head>
+<body>
+
+<input type="text" name="robot_name" id="robot_name", placeholder="WAMV">
+<input type="text" name="computer_ip" id="computer_ip", placeholder="username@ip">
+<input type="password" name="computer_password" id="computer_password", placeholder="●●●●●●●●">
+<button class="ui button" id="Connect">Connect</button>
+<button class="ui button" id="wamv_button">WAMV</button>
+<button class="ui button" id="mruh_button">MRUH</button>
+
+
+
+
+
+<script>
+
+	const electron = require('electron');
+	const { ipcRenderer } = electron;
+
+	robot_divs = [];
+	terminal_divs = [];
+	robots = [];
+
+	var robot_name_input = document.getElementById("robot_name")
+	var computer_ip_input = document.getElementById("computer_ip")
+	var computer_password_input = document.getElementById("computer_password")
+	var connect_button = document.getElementById("Connect")
+
+	var wamv_button = document.getElementById("wamv_button")
+	var mruh_button = document.getElementById("mruh_button")
+
+	wamv_button.onclick = function() {
+		computer_ip_input.value = "10.10.10.11"
+		computer_password_input.value = "Aut0m@tion"
+		robot_name_input.value = "WAMV"
+	}
+
+	mruh_button.onclick = function() {
+		computer_ip_input.value = "10.10.10.13"
+		computer_password_input.value = "Aut0m@tion"
+		robot_name_input.value = "MRUH"
+	}
+
+	connect_button.onclick = function() {
+
+		var robot_name = robot_name_input.value
+
+		var robot_object = {"name":robot_name, "ip": computer_ip_input.value, "password":computer_password_input.value}
+		robots.push()
+
+		
+		var command_input = document.createElement("input");
+		command_input.type = "text";
+		command_input.setAttribute("id", robot_name+"_command_input")
+
+		var command_button = document.createElement("button")
+		command_button.setAttribute("id", robot_name+"_command_button")
+		command_button.setAttribute("class", "ui button")
+		command_button.innerHTML = "Execute"
+
+		command_button.onclick = function(){
+
+			var terminal_div = document.createElement('div');
+			terminal_div.setAttribute("class", "terminal_div")
+			var terminal_id = terminal_divs.length
+			terminal_divs.push({"id": terminal_id, "div":terminal_div})
+
+			var exit_button = document.createElement("button")
+			exit_button.setAttribute("class", "ui button")
+			exit_button.innerHTML = "Close Terminal"
+
+			exit_button.onclick = function(){
+				terminal_div.outerHTML = "";
+				exit_button.outerHTML = ""
+				ipcRenderer.send('ssh_kill', terminal_id);
+			}
+
+			var result = robot_divs.filter(obj => {
+			  return obj.name == robot_name
+			})
+
+			// result[0].div.innerHTML += "<br>"
+			result[0].div.appendChild(exit_button)
+			result[0].div.appendChild(terminal_div)
+			// console.log("Result")
+			// console.log(result)
+
+			command_text = command_input.value
+			// ipcRenderer.send('ssh', [input_ip, password, command_text]);
+			// ssh_object = {"ip":robot_object.ip, "password": robot_object.password, "command":command_text, "robot_name": robot_object.name}
+			ssh_object = {"ip":robot_object.ip, "password": robot_object.password, "command":command_text, "command_id": terminal_id}
+			ipcRenderer.send('ssh', ssh_object);
+		}
+
+
+
+
+		var div = document.createElement('div');
+
+
+		div.innerHTML = "<br><hr/><h2>"+robot_name+"</h2><br>Terminal Command: "
+		div.appendChild(command_input)
+		div.appendChild(command_button)
+
+		var br = document.createElement('br');
+		div.appendChild(br)
+
+		document.body.appendChild(div);
+
+		robot_divs.push({"name": robot_name,"div":div})
+		// console.log("ROBOT DIVS")
+		// console.log(robot_divs)
+
+
+			// var input_ip = computer_ip_input.value
+			// var password = computer_password_input.value
+			// console.log(input_ip);
+			// ipcRenderer.send('ssh', [input_ip, password]);
+		};
+
+	computer_password_input.addEventListener("keyup", function(event) {
+		// Number 13 is the "Enter" key on the keyboard
+		if (event.keyCode === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+			connect_button.click();
+		}
+	});
+
+	ipcRenderer.on('ssh_output', (event, received_info) => {
+		var received_info_string = new TextDecoder("utf-8").decode(received_info["data"]);
+		console.log(received_info)
+		console.log("decoded:")
+		console.log(received_info_string)
+
+		// received_info_string = received_info_string.replace(String.fromCharCode(13)+String.fromCharCode(10), "<br>")
+		received_info_string = received_info_string.replace(/\n/g, "<br>")
+		received_info_string = received_info_string.replace(/\t/g, "-----")
+		// var find = '[31m'; var re = new RegExp(find, 'g');
+		// received_info_string = received_info_string.replace(re, "<font color='red'>")
+		// var find = '[1m'; var re = new RegExp(find, 'g');
+		// received_info_string = received_info_string.replace(re, "<b>")
+		// var find = '[0m'; var re = new RegExp(find, 'g');		
+		// received_info_string = received_info_string.replace(re, "</font>")
+		// var find = '[40;33;01m'; var re = new RegExp(find, 'g');
+		// received_info_string = received_info_string.replace(re, "<font color='yellow'>")
+		// var find = '[01;34m/g'; var re = new RegExp(find, 'g');
+		// received_info_string = received_info_string.replace(re, "<font color='blue'>")
+
+
+		while (received_info_string.indexOf("") != -1){
+			received_info_string = received_info_string.replace("[31m", "<font color='red'>")
+			received_info_string = received_info_string.replace("[1m", "<b>")
+			received_info_string = received_info_string.replace("[0m", "</font>")
+			received_info_string = received_info_string.replace("[40;33;01m", "<font color='yellow'>")
+			received_info_string = received_info_string.replace("[01;34m", "<font color='blue'>")
+			received_info_string = received_info_string.replace("[01;36m", "<font color='#008080'>")
+			received_info_string = received_info_string.replace("[30;42m", "<font color='green'>")
+			
+			
+
+		}
+
+		while (received_info_string.indexOf("  ") != -1){
+
+			received_info_string = received_info_string.replace("  ", "&nbsp;&nbsp;")
+		}
+		// received_info_string = received_info_string.replace("[31m", "<font color='red'>")
+		// received_info_string = received_info_string.replace("[1m", "<b>")
+		// received_info_string = received_info_string.replace("[0m", "</font>")
+		// received_info_string = received_info_string.replace("[40;33;01m", "<font color='yellow'>")
+		// received_info_string = received_info_string.replace("[01;34m", "<font color='blue'>")
+
+		
+
+		
+
+		if (received_info_string.includes("]2;")){ received_info_string = ""}
+
+		
+		
+
+
+		var content = document.createTextNode(received_info_string);
+		// console.log(received_info["id"]);
+		// console.log(received_info["data"]);
+
+		// console.log("Terminal Divs Length: "+terminal_divs.length.toString())
+		// console.log(terminal_divs)
+
+
+		// terminal_divs[received_info["id"]].div.appendChild(content);
+		terminal_divs[received_info["id"]].div.innerHTML += (received_info_string);
+		terminal_divs[received_info["id"]].div.innerHTML += "<br>";
+		terminal_divs[received_info["id"]].div.scrollTop  = terminal_divs[received_info["id"]].div.scrollHeight;
+
+		
+	})
+
+
+</script>
+
+
+
+</body>

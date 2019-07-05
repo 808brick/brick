@@ -1,0 +1,15 @@
+{
+	"name": "SSH ROS",
+	"plugin_folder": "ssh_ros",
+	"repo": null,
+	"dependencies": {
+		"electron": "^4.0.4",
+		"jimp": "^0.6.0",
+		"path": "^0.12.7",
+		"rosnodejs": "^3.0.0"
+	  },
+	  "devDependencies": {
+	  	
+	  }
+
+}

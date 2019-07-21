@@ -29,5 +29,10 @@
 	},
 	"test_ros_subscriber": {
 		"name": "Test ROS Subscriber"
+	},
+	"way_point_navigation": {
+		"name": "Way Point Navigation",
+		"repo": null,
+		"plugin_folder": "way_point_navigation"
 	}
 }

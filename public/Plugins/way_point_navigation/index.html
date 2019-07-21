@@ -1,0 +1,682 @@
+<head>
+
+	<title>Way Point Navigation</title>
+
+	<script type="text/javascript" src="../../JS/eventemitter2.min.js"></script>
+	<script type="text/javascript" src="../../JS/roslib.min.js"></script>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<!-- Bootstrap CSS -->
+	<link href="../../CSS/Bootstrap/bootstrap.min.css" rel="stylesheet" media="screen"/>
+
+	<!-- Jquery -->
+	<script src="../../JS/jquery.min.js"/>
+
+	<!-- Popper -->
+	<script src="../../JS/popper.min.js"/>
+
+
+	<!-- Bootstrap JS -->
+	<script src="../../JS/Bootstrap/bootstrap.min.js"></script>
+
+
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+	<script src="../../../node_modules/leaflet-rotatedmarker/leaflet.rotatedMarker.js"></script>
+
+	<!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
+
+
+	<!-- Semantic 
+	<link rel="stylesheet" href="../../CSS/semantic/src/semantic.min.css">
+	<script src="../../CSS/semantic/src/jquery-3.3.1.min.js"></script> -->
+
+	<!-- Require -->
+	<script src="../../JS/require.js"></script>
+	<!-- <script>
+
+		try {
+			$ = jQuery = module.exports;
+			// If you want module.exports to be empty, uncomment:
+			// module.exports = {};
+		} catch (e) {}
+
+	</script> -->
+	<!-- <script src="../../CSS/semantic/src/semantic.min.js"></script> -->
+
+
+	<style>
+		
+		select {
+		  background-color: #E3E3E3;
+		  padding: 6px;
+		  border-radius: 6px;
+		  
+		}
+		select option {
+		  padding: 6px;
+		  background-color: #EFEFEF;
+		}
+	</style>
+
+
+</head>
+
+<body>
+
+	<div id="mapid" style="width: 100%; height: 60vh;"></div>
+	<div id="map_message_div"></div>
+	<br>
+	<div style="text-align: center;">
+		<!-- <button class="btn btn-outline-secondary" id="Refresh IPC">Refresh IPC</button> -->
+		<button class="btn btn-outline-secondary" id="start map server">Start Map Server</button>
+		<button class="btn btn-outline-secondary" id="stop map server">Stop Map Server</button>
+		<button class="btn btn-outline-secondary" id="refresh map">Refresh Map</button>
+		<button class="btn btn-outline-secondary" id="refresh topics">Refresh Topics</button>
+		<button class="btn btn-outline-secondary" id="map_icons">Map Icons</button>
+		<button class="btn btn-outline-secondary" id="navigation">Navigation</button>
+	</div>	
+	<br>
+
+	<div id="map_icons_options_div" style="margin: 10px 10px 10px 10px;">
+		<div>
+			<img style="float:left; height:24px; padding-right: 10px;" src="assets/images/wamv_drawing4.png" />
+			<select class="" id="gps_topic_dropdown1">
+				<option>Select a GPS topic ...</option>
+			</select>
+			<select class="" id="imu_topic_dropdown1">
+				<option>Select a IMU topic ...</option>
+			</select>
+			<button class="btn btn-outline-secondary" id="start1_button">Start</button>
+			<button class="btn btn-outline-secondary" id="add_coordinate_1">Add Current Point</button>
+			<!-- <ul id="topic list 2">
+			</ul> -->
+			<label>Rotation: <input id="rotate degrees" type="number" value="0"></label>
+		</div>
+
+		<div>
+			<br><br>
+			<img style="float:left; height:24px; padding-right: 10px;" src="assets/images/wamv_drawing3.png" />
+			<select class="" id="gps_topic_dropdown2">
+				<option>Select a GPS topic ...</option>
+			</select>
+			<select class="" id="imu_topic_dropdown2">
+				<option>Select a IMU topic ...</option>
+			</select>
+			<button class="btn btn-outline-secondary" id="start2_button">Start</button>
+			<button class="btn btn-outline-secondary" id="add_coordinate_2">Add Current Point</button>
+			<!-- <ul id="topic list 2">
+			</ul> -->
+		</div>
+		<div>
+			<br><br>
+			<img style="float:left; height:24px; padding-right: 10px;" src="./assets/images/pc.png" />
+			<select class="" id="gps_topic_dropdown3">
+				<option>Select a GPS topic ...</option>
+			</select>
+			<select class="" id="imu_topic_dropdown3">
+				<option>Select a IMU topic ...</option>
+			</select>
+			<button class="btn btn-outline-secondary" id="start3_button">Start</button>
+			<button class="btn btn-outline-secondary" id="add_coordinate_3">Add Current Point</button>
+			<ul id="topic list 3">
+			</ul>
+		</div>
+	</div>
+
+
+	<div id="navigation_options_div" style="margin: 10px 10px 10px 10px; display: none">
+
+		<div>
+		<label>Robot</label> 
+			<select class="" id="gps_topic_dropdown3">
+					<option>Select a Robot ...</option>
+			</select>
+	  		<button class="btn btn-outline-success" id="send_path">Send Path To Robot</button>
+			<br></div><br>
+
+		<div class="container-fluid">
+		  <div class="row">
+		    <div class="col-6" style="border-left: 2px solid black">
+		      	<h3><img src="./assets/images/marker-yellow.png" alt="" style="width:24px;height:40px;">
+		      	Path Options:</h3>
+				<button class="btn btn-outline-secondary" id="add_coordinate">Add Current Point</button>
+				<button class="btn btn-outline-secondary" id="remove_last_coordinate">Remove Last Point</button>
+				<button class="btn btn-outline-secondary" id="reset_path">Reset Path</button>
+				<br><br>
+				<input type="checkbox" id="station_keep">Station Keep At Last Coordinate<br><br>
+		    </div>
+		    <div class="col-6" style="border-left: 2px solid black">
+		      <h3><img src="./assets/images/marker-red.png" alt="" style="width:24px;height:40px;">
+		      Return Options:</h3>
+				<!-- <input type="checkbox" id="return_to_point">Return To Point<br><br> -->
+					<div id="return_to_point_parameters">
+						<button class="btn btn-outline-secondary" id="add_return_coordinate">Add Current Point</button>
+						<button class="btn btn-outline-secondary" id="remove_return_last_coordinate">Remove Last Point</button>
+						<button class="btn btn-outline-secondary" id="reset_return_path">Reset Path</button><br><br>
+						<label>Return after </label><input type="number" min="0" value="10" style="width: 80px;"> Minutes
+
+					</div>
+		    </div>
+	  	  </div>
+	  	</div>
+	  	
+		
+		
+
+
+
+
+	</div>
+
+	<!--
+	 <img src="./assets/images/wamv_drawing2.png" />
+	 <select id="gps_topic_dropdown2">
+	 	<option>Select a GPS topic ...</option>
+	 </select>
+-->
+
+	<!--
+	 <ul>
+	 </ul>
+-->
+
+	<ul id="topic list 1">
+	</ul>
+
+
+
+
+	<script>
+		require = parent.require;
+		// $('.ui.dropdown').dropdown();
+		// let i = 0;
+		//21.3407/-157.9034
+		var mymap = L.map('mapid').setView([21.3114616667, -157.889675], 16);
+
+		// 			L.tileLayer('oahu/{z}/{x}/{y}.png',
+		// 			{    maxZoom: 16  }).addTo(mymap);
+
+		// var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+		// L.tileLayer('oahu.mbtiles', {
+		// 	maxZoom: 18,
+		// 	id: 'mapbox.streets'
+		// }).addTo(mymap);
+
+		// L.tileLayer('', {
+		// 	maxZoom: 18,
+		// 	id: 'mapbox.streets'
+		// }).addTo(mymap);
+
+		// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		// 	maxZoom: 18,
+		// 	id: 'mapbox.streets'
+		// }).addTo(mymap);
+
+		// lat_lng_list = [[21.31154533099292, -157.89467096328735], [21.310525819408426, -157.89834022521975], [21.3078270781142, -157.89537906646729]]
+
+		// L.polyline(lat_lng_list, {color: 'red'}).addTo(mymap);
+
+
+
+		L.tileLayer('http://localhost:8082/styles/klokantech-basic/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			id: 'mapbox.streets'
+		}).addTo(mymap);
+
+		// var marker = L.marker([21.3114616667, -157.889675]).addTo(mymap);
+
+		var greenIcon = L.icon({
+			iconUrl: './assets/images/wamv_drawing4.png',
+
+			iconSize: [32, 45], // size of the icon
+			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+		});
+
+		var marker_default = L.marker([], {})
+		var marker_visible = false;
+		var marker1_visible = false;
+		var marker2_visible = false;
+		var marker3_visible = false;
+
+
+
+		mymap.on("click", onMapClick);
+
+		function onMapClick(e) {
+			
+			marker_default
+					.setLatLng(e.latlng)
+					console.log(e.latlng)
+					// .openOn(mymap);
+			if(marker_visible == false){
+				marker_default.addTo(mymap);
+				marker_visible = false
+			}
+		}
+
+
+
+		let marker = L.marker([], {
+			icon: greenIcon,
+			rotationOrigin: "center"
+		});
+
+		var greyIcon = L.icon({
+			iconUrl: './assets/images/wamv_drawing3.png',
+
+			iconSize: [32, 45], // size of the icon
+			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+		});
+
+
+		let marker2 = L.marker([], {
+			icon: greyIcon,
+			rotationOrigin: "center"
+		});
+
+		var computerIcon = L.icon({
+			iconUrl: './assets/images/pc.png',
+
+			iconSize: [24, 24], // size of the icon
+			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+		});
+
+		let marker3 = L.marker([], {
+			icon: computerIcon,
+			rotationOrigin: "center"
+		});
+
+		const electron = require('electron');
+		const {
+			ipcRenderer
+		} = electron;
+
+		document.getElementById("start map server").onclick = function() {
+			document.getElementById("map_message_div").innerHTML = "Enter Your Password in the terminal you started the app in (if prompted)";
+			ipcRenderer.send('map_server_start', 'start map server');
+			console.log("map server start requested");
+		};
+		document.getElementById("stop map server").onclick = function() {
+			ipcRenderer.send('map_server_stop', 'stop map server');
+			console.log("map server stop requested");
+		};
+
+		document.getElementById("refresh map").onclick = function() {
+			// ipcRenderer.send("refresh_map", 'refresh map');
+			console.log('refreshing map div');
+
+			L.tileLayer('http://localhost:8082/styles/klokantech-basic/{z}/{x}/{y}.png', {
+				maxZoom: 18,
+				id: 'mapbox.streets'
+			}).addTo(mymap);
+		};
+
+
+		document.getElementById("navigation").onclick = function() {
+			document.getElementById("map_icons_options_div").style.display = "none" 
+			document.getElementById("navigation_options_div").style.display = "block" 
+		};
+
+		document.getElementById("map_icons").onclick = function() {
+			document.getElementById("navigation_options_div").style.display = "none" 
+			document.getElementById("map_icons_options_div").style.display = "block" 
+		};
+
+
+		document.getElementById("add_coordinate_1").onclick = function() {
+
+			var coords = add_point_navigation(marker_default)
+			marker.setLatLng(coords)
+
+			if( marker1_visible == false){
+				marker.addTo(mymap)
+				marker1_visible = true
+			}
+			
+		}
+
+		document.getElementById("add_coordinate_2").onclick = function() {
+
+			var coords = add_point_navigation(marker_default)
+			marker2.setLatLng(coords)
+
+			if( marker2_visible == false){
+				marker2.addTo(mymap)
+				marker2_visible = true
+			}
+			
+		}
+
+		document.getElementById("add_coordinate_3").onclick = function() {
+
+			var coords = add_point_navigation(marker_default)
+			marker3.setLatLng(coords)
+
+			if( marker3_visible == false){
+				marker3.addTo(mymap)
+				marker3_visible = true
+			}
+			
+		}
+
+
+
+		let lat_lng_list = []
+		let return_lat_lng_list = []
+		let markers = []
+		let return_markers = []
+		let poly_lines = []
+		let return_poly_lines = []
+
+
+		function add_point_navigation(marker){
+			lat_lng = marker.getLatLng()
+			var lat = lat_lng["lat"];
+			var lng = lat_lng["lng"];
+			return [lat, lng] 
+		}
+
+
+		let yellowIcon = L.icon({
+				iconUrl: './assets/images/marker-yellow.png',
+				iconSize: [24, 40], // size of the icon
+				iconAnchor: [12, 40], // point of the icon which will correspond to marker's location
+		})
+
+		let redIcon = L.icon({
+				iconUrl: './assets/images/marker-red.png',
+				iconSize: [24, 40], // size of the icon
+				iconAnchor: [12, 40], // point of the icon which will correspond to marker's location
+		})
+
+		document.getElementById("add_coordinate").onclick = function() {
+
+			var coords = add_point_navigation(marker_default) 
+			lat_lng_list.push(coords)
+			console.log(lat_lng_list)
+
+			var yellowMarker = L.marker(coords, {
+				icon: yellowIcon,
+				rotationOrigin: "center"
+			}).addTo(mymap);
+
+			markers.push(yellowMarker)
+
+			console.log(poly_lines)
+			console.log(poly_lines.length)
+			if (poly_lines.length != 0){
+				mymap.removeLayer(poly_lines[0])
+				poly_lines = []
+			}
+			
+			var poly_line = L.polyline(lat_lng_list, {color: 'orange'}).addTo(mymap);
+
+			poly_lines.push(poly_line)
+		}
+
+		document.getElementById("add_return_coordinate").onclick = function() {
+
+			var coords = add_point_navigation(marker_default) 
+			return_lat_lng_list.push(coords)
+			console.log(return_lat_lng_list)
+
+			var redMarker = L.marker(coords, {
+				icon: redIcon,
+				rotationOrigin: "center"
+			}).addTo(mymap);
+
+			markers.push(redMarker)
+
+			console.log(return_poly_lines)
+			console.log(return_poly_lines.length)
+			if (return_poly_lines.length != 0){
+				mymap.removeLayer(return_poly_lines[0])
+				return_poly_lines = []
+			}
+			
+			var return_poly_line = L.polyline(return_lat_lng_list, {color: 'red'}).addTo(mymap);
+
+			return_poly_lines.push(return_poly_line)
+		}
+
+		document.getElementById("remove_last_coordinate").onclick = function(){
+			lat_lng_list.pop()
+
+			if (poly_lines.length != 0){
+				mymap.removeLayer(poly_lines[poly_lines.length-1])
+				mymap.removeLayer(markers[markers.length-1])
+				markers.pop()
+				poly_lines = []
+				
+				var poly_line = L.polyline(lat_lng_list, {color: 'red'}).addTo(mymap);
+
+				poly_lines.push(poly_line)
+			}	
+		}
+
+		document.getElementById("reset_path").onclick = function(){
+			lat_lng_list = []
+
+			for (var i in poly_lines){
+				mymap.removeLayer(poly_lines[i])
+			}
+			for (var i in markers){
+				mymap.removeLayer(markers[i])
+			}
+				
+			markers = []
+			poly_lines = []	
+				
+		}	
+		
+
+		
+
+
+
+		// ROSSSSSSSSS dress for less
+
+		// Connecting to ROS
+		// -----------------
+
+		let ros_topics_global = {};
+
+		var ros = new ROSLIB.Ros({
+			url : 'ws://localhost:9090'
+		});
+
+		ros.on('connection', function() {
+			console.log('Connected to websocket server.');
+		});
+
+		ros.on('error', function(error) {
+			console.log('Error connecting to websocket server: ', error);
+		});
+
+		ros.on('close', function() {
+			console.log('Connection to websocket server closed.');
+		});
+
+		function populate_dropdown(dropdown_id, array_data){
+			dropdown = document.getElementById(dropdown_id);
+			if(dropdown.length != 1){
+				dropdown.length = 0;
+			}
+
+			for (var i = 0; i < array_data.length; i++) {
+				var topic_name = array_data[i];
+				var el = document.createElement("option");
+				el.textContent = topic_name;
+				el.value = topic_name;
+				dropdown.appendChild(el);
+			}
+		}
+
+		function ros_topic_populate_dropdown(dropdown_id){
+			ros.getTopics(function(params) {
+					console.log(params)
+					 populate_dropdown(dropdown_id, params["topics"]);
+					 update_ros_topics_global(params["topics"], params["types"]);
+				 });
+		};
+
+		function create_new_subscriber(topic_name, callback){
+			var listener = new ROSLIB.Topic({
+				ros : ros,
+				name : topic_name,
+				// messageType : 'std_msgs/String'
+				messageType : ros_topics_global[topic_name]
+			});
+
+			// listener.subscribe(function(message){ callback(message) });
+			listener.subscribe(function(message) {
+				// console.log(message)
+				callback(message)
+			});
+		}
+
+		function update_ros_topics_global(topics_array, types_array){
+			ros_topics_global = {};
+			for (var i = 0; i < topics_array.length; i++) {
+				ros_topics_global[topics_array[i]] = types_array[i];
+			}
+			// console.log(ros_topics_global);
+		}
+
+		// document.getElementById("refresh_topics_button").onclick = function() {
+		// 		ros_topic_populate_dropdown("add_topic_dropdown")
+		// 		console.log("You pressed the button");
+		// 	}
+
+			function ros_specific_topic_type_populate_dropdown(topic_type, dropdown_id){
+				// console.log("specific topic type dropdown")
+				ros.getTopicsForType(topic_type, function(params) {
+						// console.log(params)
+						 populate_dropdown(dropdown_id, params);
+						 // update_ros_topics_global(params["topics"], params["types"]);
+					 });
+			};
+
+			// ros_topic_populate_dropdown("imu_topic_dropdown1");
+			function refresh_topic_dropdowns(){
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown1");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown2");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/NavSatFix", "gps_topic_dropdown3");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown1");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown2");
+				ros_specific_topic_type_populate_dropdown("sensor_msgs/Imu", "imu_topic_dropdown3");
+			}
+
+			document.getElementById("start1_button").onclick = function(){
+					var dropdown_option_gps = document.getElementById("gps_topic_dropdown1")
+					var gps_value = dropdown_option_gps.options[dropdown_option_gps.selectedIndex].value
+					var dropdown_option_imu = document.getElementById("imu_topic_dropdown1")
+					var imu_value = dropdown_option_imu.options[dropdown_option_imu.selectedIndex].value
+					create_new_subscriber(gps_value, function(message){
+						var newLatLng = new L.LatLng(message.latitude, message.longitude);
+						marker.setLatLng(newLatLng);
+						if( marker_visible == false){
+							marker.addTo(mymap)
+							marker1_visible = true
+						}
+						// 		mymap.removeLayer(marker);
+						// // 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+						// 		marker = L.marker([message.latitude, message.longitude], {
+						// 			icon: greenIcon
+						// 		}).addTo(mymap);
+					});
+
+					if (imu_value != "Select a IMU topic ..."){
+						create_new_subscriber(imu_value, function(message){
+								// console.log(message);
+								q = message.orientation
+								var yaw = Math.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z);
+
+								marker.setRotationAngle((yaw+3.14159/2)*-180/3.14159);
+							})
+					}
+			}
+
+			document.getElementById("start2_button").onclick = function(){
+					var dropdown_option_gps2 = document.getElementById("gps_topic_dropdown2")
+					var gps_value2 = dropdown_option_gps2.options[dropdown_option_gps2.selectedIndex].value
+					var dropdown_option_imu2 = document.getElementById("imu_topic_dropdown2")
+					var imu_value2 = dropdown_option_imu2.options[dropdown_option_imu2.selectedIndex].value
+					create_new_subscriber(gps_value2, function(message){
+						var newLatLng = new L.LatLng(message.latitude, message.longitude);
+						marker2.setLatLng(newLatLng);
+						if( marker2_visible == false){
+							marker2.addTo(mymap)
+							marker2_visible = true
+						}
+						// 		mymap.removeLayer(marker2);
+						// // 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+						// 		marker2 = L.marker([message.latitude, message.longitude], {
+						// 			icon: greyIcon
+						// 		}).addTo(mymap);
+					});
+
+					if (imu_value2 != "Select a IMU topic ..."){
+						create_new_subscriber(imu_value2, function(message){
+								// console.log(message);
+								q = message.orientation
+								var yaw = Math.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z);
+
+								marker2.setRotationAngle((yaw+3.14159/2)*-180/3.14159);
+
+						})
+
+					}
+
+			}
+
+			document.getElementById("start3_button").onclick = function(){
+					var dropdown_option_gps3 = document.getElementById("gps_topic_dropdown3")
+					var gps_value3 = dropdown_option_gps3.options[dropdown_option_gps3.selectedIndex].value
+					var dropdown_option_imu3 = document.getElementById("imu_topic_dropdown3")
+					var imu_value3 = dropdown_option_imu3.options[dropdown_option_imu3.selectedIndex].value
+					create_new_subscriber(gps_value3, function(message){
+								// mymap.removeLayer(marker3);
+								var newLatLng = new L.LatLng(message.latitude, message.longitude);
+    						marker3.setLatLng(newLatLng);
+    						if( marker3_visible == false){
+								marker3.addTo(mymap)
+								marker3_visible = true
+							}
+						// 		// marker = L.marker([received_info.latitude, received_info.longitude]).addTo(mymap);
+								// marker3 = L.marker([message.latitude, message.longitude], {
+								// 	icon: computerIcon
+								// }).addTo(mymap);
+					});
+
+					if (imu_value3 != "Select a IMU topic ..."){
+						create_new_subscriber(imu_value3, function(message){
+								// console.log(message);
+								q = message.orientation
+								var yaw = Math.atan2(2.0*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z);
+
+								marker3.setRotationAngle((yaw+3.14159/2)*-180/3.14159);
+
+						})
+					}
+
+			}
+
+			refresh_topic_dropdowns()
+
+			document.getElementById("refresh topics").onclick = function() {
+				// console.log("Button Pressed")
+				refresh_topic_dropdowns()
+			}
+
+
+	</script>
+
+</body>

@@ -432,7 +432,7 @@
 				rotationOrigin: "center"
 			}).addTo(mymap);
 
-			markers.push(redMarker)
+			return_markers.push(redMarker)
 
 			console.log(return_poly_lines)
 			console.log(return_poly_lines.length)
@@ -455,9 +455,24 @@
 				markers.pop()
 				poly_lines = []
 				
-				var poly_line = L.polyline(lat_lng_list, {color: 'red'}).addTo(mymap);
+				var poly_line = L.polyline(lat_lng_list, {color: 'orange'}).addTo(mymap);
 
 				poly_lines.push(poly_line)
+			}	
+		}
+
+		document.getElementById("remove_return_last_coordinate").onclick = function(){
+			return_lat_lng_list.pop()
+
+			if (return_poly_lines.length != 0){
+				mymap.removeLayer(return_poly_lines[return_poly_lines.length-1])
+				mymap.removeLayer(return_markers[return_markers.length-1])
+				return_markers.pop()
+				return_poly_lines = []
+				
+				var return_poly_line = L.polyline(return_lat_lng_list, {color: 'red'}).addTo(mymap);
+
+				return_poly_lines.push(return_poly_line)
 			}	
 		}
 
@@ -473,6 +488,21 @@
 				
 			markers = []
 			poly_lines = []	
+				
+		}	
+
+		document.getElementById("reset_return_path").onclick = function(){
+			return_lat_lng_list = []
+
+			for (var i in return_poly_lines){
+				mymap.removeLayer(return_poly_lines[i])
+			}
+			for (var i in return_markers){
+				mymap.removeLayer(return_markers[i])
+			}
+				
+			return_markers = []
+			return_poly_lines = []	
 				
 		}	
 		
